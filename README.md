@@ -1,5 +1,10 @@
 # Top Visited Posts
 
+[![Lint](https://github.com/amahallawy/TopVisitedPostsWP/actions/workflows/lint.yml/badge.svg)](https://github.com/amahallawy/TopVisitedPostsWP/actions/workflows/lint.yml)
+[![CS](https://github.com/amahallawy/TopVisitedPostsWP/actions/workflows/cs.yml/badge.svg)](https://github.com/amahallawy/TopVisitedPostsWP/actions/workflows/cs.yml)
+[![LintJS](https://github.com/amahallawy/TopVisitedPostsWP/actions/workflows/lintjs.yml/badge.svg)](https://github.com/amahallawy/TopVisitedPostsWP/actions/workflows/lintjs.yml)
+[![License: GPL-2.0-or-later](https://img.shields.io/badge/License-GPL--2.0--or--later-blue.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
+
 A WordPress plugin that tracks post views and displays a ranked, configurable section of the most visited posts in a category — with a smooth scroll-to-post navigation when visitors click through to the target page.
 
 Built for sites that organize content by category on dedicated pages (e.g. a "News" or "Articles" page rendered with Spectra Post Grid or a theme template). Instead of opening the individual post, clicking a top-posts item takes the visitor to the category page and scrolls the matching card into view with a brief highlight.
