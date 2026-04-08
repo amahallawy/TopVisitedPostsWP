@@ -204,9 +204,12 @@
 	background: #fff;
 	overflow: hidden;
 	position: relative;
+	display: flex;
+	flex-direction: column;
 }
 
 .tvp-layout-grid .tvp-post-link {
+	flex: 1 1 auto;
 	flex-direction: column;
 	align-items: stretch;
 	padding: 0;
@@ -245,6 +248,7 @@
 .tvp-layout-grid .tvp-post-date,
 .tvp-layout-grid .tvp-post-views {
 	padding: 0.25em 0.75em;
+	flex: 0 0 auto;
 }
 
 .tvp-layout-grid .tvp-post-title {
