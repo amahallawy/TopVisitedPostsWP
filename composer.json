@@ -1,0 +1,30 @@
+{
+    "name": "amahallawy/top-visited-posts",
+    "description": "WordPress plugin that tracks post views and displays a ranked, configurable section of top visited posts with smooth scroll-to-post navigation.",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "homepage": "https://github.com/amahallawy/TopVisitedPostsWP",
+    "authors": [
+        {
+            "name": "Ahmed Mahallawy",
+            "homepage": "https://github.com/amahallawy"
+        }
+    ],
+    "require": {
+        "php": ">=7.4"
+    },
+    "require-dev": {
+        "wp-coding-standards/wpcs": "^3.0",
+        "phpcompatibility/phpcompatibility-wp": "^2.1",
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.0"
+    },
+    "scripts": {
+        "lint": "phpcs",
+        "lint:fix": "phpcbf"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
+}
