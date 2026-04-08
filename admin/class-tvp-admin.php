@@ -10,6 +10,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Handles the plugin's admin settings page (menu, fields, sanitization).
+ */
 class TVP_Admin {
 
 	/**
@@ -228,7 +231,7 @@ class TVP_Admin {
 		$sanitized['show_rank']     = ! empty( $input['show_rank'] ) ? 1 : 0;
 
 		// Order by — ordered list of enabled criteria.
-		$valid_orders = array_keys( self::get_order_criteria() );
+		$valid_orders          = array_keys( self::get_order_criteria() );
 		$sanitized['order_by'] = array();
 		if ( isset( $input['order_by'] ) && is_array( $input['order_by'] ) ) {
 			foreach ( $input['order_by'] as $criterion ) {
@@ -266,7 +269,7 @@ class TVP_Admin {
 		}
 
 		// Elements: ordered list of enabled element keys.
-		$available = array_keys( self::get_available_elements() );
+		$available             = array_keys( self::get_available_elements() );
 		$sanitized['elements'] = array();
 		if ( isset( $input['elements'] ) && is_array( $input['elements'] ) ) {
 			foreach ( $input['elements'] as $el ) {
@@ -305,15 +308,17 @@ class TVP_Admin {
 		$options  = get_option( self::OPTION_KEY );
 		$selected = isset( $options['category'] ) ? absint( $options['category'] ) : 0;
 
-		wp_dropdown_categories( array(
-			'name'              => self::OPTION_KEY . '[category]',
-			'id'                => 'tvp_category',
-			'selected'          => $selected,
-			'show_option_none'  => __( '— Select Category —', 'top-visited-posts' ),
-			'option_none_value' => 0,
-			'hide_empty'        => false,
-			'class'             => 'tvp-select',
-		) );
+		wp_dropdown_categories(
+			array(
+				'name'              => self::OPTION_KEY . '[category]',
+				'id'                => 'tvp_category',
+				'selected'          => $selected,
+				'show_option_none'  => __( '— Select Category —', 'top-visited-posts' ),
+				'option_none_value' => 0,
+				'hide_empty'        => false,
+				'class'             => 'tvp-select',
+			)
+		);
 		echo '<p class="description">' . esc_html__( 'Choose the post category to display in the top posts section.', 'top-visited-posts' ) . '</p>';
 	}
 
@@ -324,14 +329,18 @@ class TVP_Admin {
 		$options  = get_option( self::OPTION_KEY );
 		$selected = isset( $options['page_id'] ) ? absint( $options['page_id'] ) : 0;
 
-		wp_dropdown_pages( array(
-			'name'              => self::OPTION_KEY . '[page_id]',
-			'id'                => 'tvp_page_id',
-			'selected'          => $selected,
-			'show_option_none'  => __( '— Select Page —', 'top-visited-posts' ),
-			'option_none_value' => 0,
-			'class'             => 'tvp-select',
-		) );
+		// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_dropdown_pages outputs pre-escaped HTML; array args are internal configuration, not user input.
+		wp_dropdown_pages(
+			array(
+				'name'              => self::OPTION_KEY . '[page_id]',
+				'id'                => 'tvp_page_id',
+				'selected'          => $selected,
+				'show_option_none'  => __( '— Select Page —', 'top-visited-posts' ),
+				'option_none_value' => 0,
+				'class'             => 'tvp-select',
+			)
+		);
+		// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo '<p class="description">' . esc_html__( 'The page that lists posts from the selected category (e.g. using a Spectra Post Grid block). Clicking a top post navigates here and scrolls to it.', 'top-visited-posts' ) . '</p>';
 	}
 
@@ -364,7 +373,7 @@ class TVP_Admin {
 		}
 
 		// Separate enabled (in saved order) from disabled.
-		$enabled  = array();
+		$enabled = array();
 		foreach ( $order_by as $key ) {
 			if ( isset( $available[ $key ] ) ) {
 				$enabled[ $key ] = $available[ $key ];
@@ -452,7 +461,7 @@ class TVP_Admin {
 		$available = self::get_available_elements();
 
 		// Separate enabled (in order) from disabled.
-		$enabled  = array();
+		$enabled = array();
 		foreach ( $elements as $key ) {
 			if ( isset( $available[ $key ] ) ) {
 				$enabled[ $key ] = $available[ $key ];
@@ -542,9 +551,9 @@ class TVP_Admin {
 		for ( $i = 2; $i <= 4; $i++ ) {
 			printf(
 				'<option value="%d" %s>%d %s</option>',
-				$i,
+				(int) $i,
 				selected( $columns, $i, false ),
-				$i,
+				(int) $i,
 				esc_html__( 'columns', 'top-visited-posts' )
 			);
 		}

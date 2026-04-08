@@ -10,6 +10,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Frontend shortcode handler and HTML builder for Top Visited Posts.
+ */
 class TVP_Public {
 
 	/**
@@ -49,22 +52,28 @@ class TVP_Public {
 			$post_map = array();
 
 			if ( $category ) {
-				$posts = get_posts( array(
-					'post_type'      => 'post',
-					'post_status'    => 'publish',
-					'cat'            => $category,
-					'posts_per_page' => 100,
-					'fields'         => 'ids',
-				) );
+				$posts = get_posts(
+					array(
+						'post_type'      => 'post',
+						'post_status'    => 'publish',
+						'cat'            => $category,
+						'posts_per_page' => 100,
+						'fields'         => 'ids',
+					)
+				);
 
 				foreach ( $posts as $pid ) {
 					$post_map[ get_permalink( $pid ) ] = $pid;
 				}
 			}
 
-			wp_localize_script( 'tvp-scroll', 'tvpScroll', array(
-				'postMap' => $post_map,
-			) );
+			wp_localize_script(
+				'tvp-scroll',
+				'tvpScroll',
+				array(
+					'postMap' => $post_map,
+				)
+			);
 		}
 	}
 
@@ -74,7 +83,7 @@ class TVP_Public {
 	 * @param array $atts Shortcode attributes (unused, settings come from DB).
 	 * @return string HTML output.
 	 */
-	public function render_shortcode( $atts ) {
+	public function render_shortcode( $atts ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Required by add_shortcode signature.
 		return $this->build_section();
 	}
 
@@ -125,15 +134,18 @@ class TVP_Public {
 	 * @return array Sorted posts.
 	 */
 	private function multi_sort( $posts, $criteria ) {
-		usort( $posts, function ( $a, $b ) use ( $criteria ) {
-			foreach ( $criteria as $criterion ) {
-				$result = $this->compare_by_criterion( $a, $b, $criterion );
-				if ( 0 !== $result ) {
-					return $result;
+		usort(
+			$posts,
+			function ( $a, $b ) use ( $criteria ) {
+				foreach ( $criteria as $criterion ) {
+					$result = $this->compare_by_criterion( $a, $b, $criterion );
+					if ( 0 !== $result ) {
+						return $result;
+					}
 				}
+				return 0;
 			}
-			return 0;
-		} );
+		);
 		return $posts;
 	}
 
@@ -160,18 +172,28 @@ class TVP_Public {
 		}
 
 		// Re-validate arrays from the database against allowlists.
-		$valid_orders   = array_keys( TVP_Admin::get_order_criteria() );
-		$order_by       = array_values( array_filter( $order_by, function ( $v ) use ( $valid_orders ) {
-			return in_array( $v, $valid_orders, true );
-		} ) );
+		$valid_orders = array_keys( TVP_Admin::get_order_criteria() );
+		$order_by     = array_values(
+			array_filter(
+				$order_by,
+				function ( $v ) use ( $valid_orders ) {
+					return in_array( $v, $valid_orders, true );
+				}
+			)
+		);
 		if ( empty( $order_by ) ) {
 			$order_by = array( 'most_views' );
 		}
 
 		$valid_elements = array_keys( TVP_Admin::get_available_elements() );
-		$elements       = array_values( array_filter( $elements, function ( $v ) use ( $valid_elements ) {
-			return in_array( $v, $valid_elements, true );
-		} ) );
+		$elements       = array_values(
+			array_filter(
+				$elements,
+				function ( $v ) use ( $valid_elements ) {
+					return in_array( $v, $valid_elements, true );
+				}
+			)
+		);
 		if ( empty( $elements ) ) {
 			$elements = array( 'title' );
 		}
@@ -181,12 +203,14 @@ class TVP_Public {
 		}
 
 		// Fetch all candidates from the category, sort in PHP for multi-layer ordering.
-		$query = new WP_Query( array(
-			'post_type'      => 'post',
-			'post_status'    => 'publish',
-			'posts_per_page' => 100,
-			'cat'            => $category,
-		) );
+		$query = new WP_Query(
+			array(
+				'post_type'      => 'post',
+				'post_status'    => 'publish',
+				'posts_per_page' => 100,
+				'cat'            => $category,
+			)
+		);
 
 		if ( ! $query->have_posts() ) {
 			return '<!-- Top Visited Posts: No posts found -->';
@@ -226,8 +250,9 @@ class TVP_Public {
 			<ul class="tvp-post-list">
 				<?php
 				foreach ( $all_posts as $the_post ) :
-					setup_postdata( $GLOBALS['post'] = $the_post ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-					$rank++;
+					$GLOBALS['post'] = $the_post; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+					setup_postdata( $GLOBALS['post'] );
+					++$rank;
 					$post_id    = $the_post->ID;
 					$views      = TVP_Tracker::get_views( $post_id );
 					$anchor_id  = 'tvp-post-' . $post_id;
@@ -244,7 +269,7 @@ class TVP_Public {
 					if ( is_sticky( $post_id ) ) {
 						$item_classes .= ' tvp-post-featured';
 					}
-				?>
+					?>
 					<li class="<?php echo esc_attr( $item_classes ); ?>">
 						<a href="<?php echo esc_url( $link ); ?>" class="tvp-post-link" data-tvp-target="<?php echo esc_attr( $anchor_id ); ?>">
 							<?php if ( $show_rank ) : ?>

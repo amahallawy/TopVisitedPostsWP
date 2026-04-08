@@ -12,6 +12,8 @@
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       top-visited-posts
  * Domain Path:       /languages
+ *
+ * @package TopVisitedPosts
  */
 
 // Abort if called directly.

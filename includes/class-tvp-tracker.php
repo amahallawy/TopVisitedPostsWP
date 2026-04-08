@@ -10,6 +10,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Tracks and persists post view counts via AJAX.
+ */
 class TVP_Tracker {
 
 	/**
@@ -44,11 +47,15 @@ class TVP_Tracker {
 			true
 		);
 
-		wp_localize_script( 'tvp-tracker', 'tvpTracker', array(
-			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-			'postId'  => get_the_ID(),
-			'nonce'   => wp_create_nonce( 'tvp_track_view' ),
-		) );
+		wp_localize_script(
+			'tvp-tracker',
+			'tvpTracker',
+			array(
+				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+				'postId'  => get_the_ID(),
+				'nonce'   => wp_create_nonce( 'tvp_track_view' ),
+			)
+		);
 	}
 
 	/**
@@ -65,13 +72,16 @@ class TVP_Tracker {
 		}
 
 		// Rate limit: one count per IP + post per 30 minutes.
-		$ip_hash       = md5( $_SERVER['REMOTE_ADDR'] ?? 'unknown' );
+		$remote_addr   = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : 'unknown';
+		$ip_hash       = md5( $remote_addr );
 		$transient_key = 'tvp_view_' . $ip_hash . '_' . $post_id;
 		if ( get_transient( $transient_key ) ) {
-			wp_send_json_success( array(
-				'views'   => (int) get_post_meta( $post_id, self::META_KEY, true ),
-				'counted' => false,
-			) );
+			wp_send_json_success(
+				array(
+					'views'   => (int) get_post_meta( $post_id, self::META_KEY, true ),
+					'counted' => false,
+				)
+			);
 		}
 		set_transient( $transient_key, 1, 30 * MINUTE_IN_SECONDS );
 
@@ -82,17 +92,25 @@ class TVP_Tracker {
 
 		// Atomic increment — avoids race conditions under concurrent requests.
 		global $wpdb;
-		$wpdb->query( $wpdb->prepare(
-			"UPDATE {$wpdb->postmeta} SET meta_value = meta_value + 1 WHERE post_id = %d AND meta_key = %s",
-			$post_id,
-			self::META_KEY
-		) );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Atomic increment requires a direct query; there is no WP-Meta API equivalent.
+		$wpdb->query(
+			$wpdb->prepare(
+				"UPDATE {$wpdb->postmeta} SET meta_value = meta_value + 1 WHERE post_id = %d AND meta_key = %s",
+				$post_id,
+				self::META_KEY
+			)
+		);
 
 		// Clean the meta cache so subsequent reads reflect the new value.
 		wp_cache_delete( $post_id, 'post_meta' );
 		$new_count = (int) get_post_meta( $post_id, self::META_KEY, true );
 
-		wp_send_json_success( array( 'views' => $new_count, 'counted' => true ) );
+		wp_send_json_success(
+			array(
+				'views'   => $new_count,
+				'counted' => true,
+			)
+		);
 	}
 
 	/**

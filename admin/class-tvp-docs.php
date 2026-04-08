@@ -10,6 +10,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Renders the CSS Documentation admin submenu page.
+ */
 class TVP_Docs {
 
 	/**
@@ -70,17 +73,17 @@ class TVP_Docs {
 				__( 'CSS Custom Properties (Variables)', 'top-visited-posts' ),
 				__( 'Override these on .tvp-section to change the entire color scheme. They cascade to all child elements.', 'top-visited-posts' ),
 				array(
-					array( '--tvp-bg',              '#f9fafb',  __( 'Section background color', 'top-visited-posts' ) ),
-					array( '--tvp-border',           '#e5e7eb',  __( 'Border and separator color', 'top-visited-posts' ) ),
-					array( '--tvp-title-color',      '#111827',  __( 'Section heading color', 'top-visited-posts' ) ),
-					array( '--tvp-text-color',       '#1f2937',  __( 'Post title text color', 'top-visited-posts' ) ),
-					array( '--tvp-meta-color',       '#6b7280',  __( 'Meta text color (excerpt, date, views, rank badge)', 'top-visited-posts' ) ),
-					array( '--tvp-accent',           '#4f46e5',  __( 'Accent color (view count, focus ring)', 'top-visited-posts' ) ),
-					array( '--tvp-hover-bg',         '#eef2ff',  __( 'Post item background on hover / focus', 'top-visited-posts' ) ),
-					array( '--tvp-featured-bg',      '#fffbeb',  __( 'Background for sticky post items', 'top-visited-posts' ) ),
-					array( '--tvp-featured-border',  '#f59e0b',  __( 'Left border color for sticky post items', 'top-visited-posts' ) ),
-					array( '--tvp-radius',           '8px',      __( 'Border radius for the section and grid cards', 'top-visited-posts' ) ),
-					array( '--tvp-columns',          '3',        __( 'Number of grid columns on desktop (set via plugin settings)', 'top-visited-posts' ) ),
+					array( '--tvp-bg', '#f9fafb', __( 'Section background color', 'top-visited-posts' ) ),
+					array( '--tvp-border', '#e5e7eb', __( 'Border and separator color', 'top-visited-posts' ) ),
+					array( '--tvp-title-color', '#111827', __( 'Section heading color', 'top-visited-posts' ) ),
+					array( '--tvp-text-color', '#1f2937', __( 'Post title text color', 'top-visited-posts' ) ),
+					array( '--tvp-meta-color', '#6b7280', __( 'Meta text color (excerpt, date, views, rank badge)', 'top-visited-posts' ) ),
+					array( '--tvp-accent', '#4f46e5', __( 'Accent color (view count, focus ring)', 'top-visited-posts' ) ),
+					array( '--tvp-hover-bg', '#eef2ff', __( 'Post item background on hover / focus', 'top-visited-posts' ) ),
+					array( '--tvp-featured-bg', '#fffbeb', __( 'Background for sticky post items', 'top-visited-posts' ) ),
+					array( '--tvp-featured-border', '#f59e0b', __( 'Left border color for sticky post items', 'top-visited-posts' ) ),
+					array( '--tvp-radius', '8px', __( 'Border radius for the section and grid cards', 'top-visited-posts' ) ),
+					array( '--tvp-columns', '3', __( 'Number of grid columns on desktop (set via plugin settings)', 'top-visited-posts' ) ),
 				),
 				true
 			);
@@ -89,8 +92,8 @@ class TVP_Docs {
 				__( 'Section Container', 'top-visited-posts' ),
 				__( 'The outermost wrapper and section heading.', 'top-visited-posts' ),
 				array(
-					array( '.tvp-section',       __( 'Outermost wrapper. Receives layout modifiers and dir="rtl" attribute. Apply custom properties here to re-theme.', 'top-visited-posts' ) ),
-					array( '.tvp-section-title',  __( 'The &lt;h2&gt; section heading ("Top Visited Posts"). Hidden if the Section Title setting is empty.', 'top-visited-posts' ) ),
+					array( '.tvp-section', __( 'Outermost wrapper. Receives layout modifiers and dir="rtl" attribute. Apply custom properties here to re-theme.', 'top-visited-posts' ) ),
+					array( '.tvp-section-title', __( 'The &lt;h2&gt; section heading ("Top Visited Posts"). Hidden if the Section Title setting is empty.', 'top-visited-posts' ) ),
 				)
 			);
 
@@ -98,10 +101,10 @@ class TVP_Docs {
 				__( 'Post List & Items', 'top-visited-posts' ),
 				__( 'The list container and each individual post item.', 'top-visited-posts' ),
 				array(
-					array( '.tvp-post-list',      __( 'The &lt;ul&gt; that contains all post items. Becomes a CSS grid in grid layout.', 'top-visited-posts' ) ),
-					array( '.tvp-post-item',       __( 'Each &lt;li&gt; wrapping a single post. Receives .tvp-post-featured if the post is sticky.', 'top-visited-posts' ) ),
-					array( '.tvp-post-featured',   __( 'Modifier added to sticky posts (WordPress native sticky). Adds a left border (border-inline-start) and warm background.', 'top-visited-posts' ) ),
-					array( '.tvp-post-link',       __( 'The &lt;a&gt; element wrapping all post content. Flex container for layout. Receives hover/focus styles.', 'top-visited-posts' ) ),
+					array( '.tvp-post-list', __( 'The &lt;ul&gt; that contains all post items. Becomes a CSS grid in grid layout.', 'top-visited-posts' ) ),
+					array( '.tvp-post-item', __( 'Each &lt;li&gt; wrapping a single post. Receives .tvp-post-featured if the post is sticky.', 'top-visited-posts' ) ),
+					array( '.tvp-post-featured', __( 'Modifier added to sticky posts (WordPress native sticky). Adds a left border (border-inline-start) and warm background.', 'top-visited-posts' ) ),
+					array( '.tvp-post-link', __( 'The &lt;a&gt; element wrapping all post content. Flex container for layout. Receives hover/focus styles.', 'top-visited-posts' ) ),
 				)
 			);
 
@@ -117,8 +120,8 @@ class TVP_Docs {
 				__( 'Thumbnail', 'top-visited-posts' ),
 				__( 'The post featured image. Only rendered when the "Thumbnail" element is enabled and the post has a featured image.', 'top-visited-posts' ),
 				array(
-					array( '.tvp-post-thumb',     __( 'Thumbnail container. Fixed size in list layout, full-width 16:9 ratio in grid layout.', 'top-visited-posts' ) ),
-					array( '.tvp-post-thumb img',  __( 'The &lt;img&gt; inside the thumbnail. Uses object-fit: cover for consistent sizing.', 'top-visited-posts' ) ),
+					array( '.tvp-post-thumb', __( 'Thumbnail container. Fixed size in list layout, full-width 16:9 ratio in grid layout.', 'top-visited-posts' ) ),
+					array( '.tvp-post-thumb img', __( 'The &lt;img&gt; inside the thumbnail. Uses object-fit: cover for consistent sizing.', 'top-visited-posts' ) ),
 				)
 			);
 
@@ -126,10 +129,10 @@ class TVP_Docs {
 				__( 'Post Content Elements', 'top-visited-posts' ),
 				__( 'Each element is a &lt;span&gt; rendered in the order configured in settings. Elements can be enabled/disabled and reordered.', 'top-visited-posts' ),
 				array(
-					array( '.tvp-post-title',       __( 'Post title. Truncated to 2 lines with text-overflow ellipsis. Uses --tvp-text-color.', 'top-visited-posts' ) ),
-					array( '.tvp-post-excerpt',      __( 'Post excerpt (first 12 words). Truncated to 2 lines. Hidden in list layout on mobile, visible on tablet+.', 'top-visited-posts' ) ),
-					array( '.tvp-post-date',         __( 'Relative date ("2 hours ago", "5 days ago"). Uses --tvp-meta-color.', 'top-visited-posts' ) ),
-					array( '.tvp-post-views',        __( 'View count display ("42 views"). The number is wrapped in &lt;strong&gt; with --tvp-accent color.', 'top-visited-posts' ) ),
+					array( '.tvp-post-title', __( 'Post title. Truncated to 2 lines with text-overflow ellipsis. Uses --tvp-text-color.', 'top-visited-posts' ) ),
+					array( '.tvp-post-excerpt', __( 'Post excerpt (first 12 words). Truncated to 2 lines. Hidden in list layout on mobile, visible on tablet+.', 'top-visited-posts' ) ),
+					array( '.tvp-post-date', __( 'Relative date ("2 hours ago", "5 days ago"). Uses --tvp-meta-color.', 'top-visited-posts' ) ),
+					array( '.tvp-post-views', __( 'View count display ("42 views"). The number is wrapped in &lt;strong&gt; with --tvp-accent color.', 'top-visited-posts' ) ),
 					array( '.tvp-post-views strong', __( 'The numeric view count within the views element. Styled with the accent color.', 'top-visited-posts' ) ),
 				)
 			);
@@ -138,8 +141,8 @@ class TVP_Docs {
 				__( 'Layout Modifiers', 'top-visited-posts' ),
 				__( 'Added to .tvp-section to switch between list and grid layout.', 'top-visited-posts' ),
 				array(
-					array( '.tvp-layout-list',  __( 'List layout: items stack vertically separated by border lines. Excerpt hidden on mobile.', 'top-visited-posts' ) ),
-					array( '.tvp-layout-grid',  __( 'Grid layout: items display as cards in a CSS Grid. 1 col mobile → 2 cols tablet → configurable cols desktop.', 'top-visited-posts' ) ),
+					array( '.tvp-layout-list', __( 'List layout: items stack vertically separated by border lines. Excerpt hidden on mobile.', 'top-visited-posts' ) ),
+					array( '.tvp-layout-grid', __( 'Grid layout: items display as cards in a CSS Grid. 1 col mobile → 2 cols tablet → configurable cols desktop.', 'top-visited-posts' ) ),
 				)
 			);
 
@@ -147,11 +150,11 @@ class TVP_Docs {
 				__( 'Grid-Specific Overrides', 'top-visited-posts' ),
 				__( 'These selectors apply only when .tvp-layout-grid is active.', 'top-visited-posts' ),
 				array(
-					array( '.tvp-layout-grid .tvp-post-list',   __( 'Becomes a CSS grid container. Columns controlled by --tvp-columns at desktop breakpoint.', 'top-visited-posts' ) ),
-					array( '.tvp-layout-grid .tvp-post-item',    __( 'Each card gets a border, rounded corners, and white background.', 'top-visited-posts' ) ),
-					array( '.tvp-layout-grid .tvp-post-link',    __( 'Switches to flex-direction: column so content stacks vertically inside the card.', 'top-visited-posts' ) ),
-					array( '.tvp-layout-grid .tvp-rank-badge',   __( 'Positioned absolutely at top-start of the card with a subtle shadow.', 'top-visited-posts' ) ),
-					array( '.tvp-layout-grid .tvp-post-thumb',   __( 'Full-width with 16:9 aspect ratio (padding-bottom: 56.25%). Image fills absolutely.', 'top-visited-posts' ) ),
+					array( '.tvp-layout-grid .tvp-post-list', __( 'Becomes a CSS grid container. Columns controlled by --tvp-columns at desktop breakpoint.', 'top-visited-posts' ) ),
+					array( '.tvp-layout-grid .tvp-post-item', __( 'Each card gets a border, rounded corners, and white background.', 'top-visited-posts' ) ),
+					array( '.tvp-layout-grid .tvp-post-link', __( 'Switches to flex-direction: column so content stacks vertically inside the card.', 'top-visited-posts' ) ),
+					array( '.tvp-layout-grid .tvp-rank-badge', __( 'Positioned absolutely at top-start of the card with a subtle shadow.', 'top-visited-posts' ) ),
+					array( '.tvp-layout-grid .tvp-post-thumb', __( 'Full-width with 16:9 aspect ratio (padding-bottom: 56.25%). Image fills absolutely.', 'top-visited-posts' ) ),
 				)
 			);
 
@@ -159,7 +162,7 @@ class TVP_Docs {
 				__( 'Scroll Highlight Animation', 'top-visited-posts' ),
 				__( 'Applied when a user clicks a TVP item and is scrolled to the post on the target page.', 'top-visited-posts' ),
 				array(
-					array( '.tvp-scroll-highlight',  __( 'Added to the target post element after scroll. Triggers a 2s yellow pulse animation. Removed after animationend.', 'top-visited-posts' ) ),
+					array( '.tvp-scroll-highlight', __( 'Added to the target post element after scroll. Triggers a 2s yellow pulse animation. Removed after animationend.', 'top-visited-posts' ) ),
 				)
 			);
 
@@ -167,10 +170,10 @@ class TVP_Docs {
 				__( 'Responsive Breakpoints', 'top-visited-posts' ),
 				__( 'Mobile-first breakpoints that adjust sizing, spacing, and grid columns.', 'top-visited-posts' ),
 				array(
-					array( '@media (min-width: 480px)',   __( 'Small phones: slightly larger padding, thumbnails (56px), grid → 2 columns.', 'top-visited-posts' ) ),
-					array( '@media (min-width: 768px)',   __( 'Tablets: larger spacing, thumbnails (64px), list excerpt visible, grid → 2 columns.', 'top-visited-posts' ) ),
-					array( '@media (min-width: 1024px)',  __( 'Desktop: full padding, thumbnails (72px), grid → configured column count.', 'top-visited-posts' ) ),
-					array( '@media (min-width: 1280px)',  __( 'Wide screens: slightly larger title, grid card aspect ratio adjusted.', 'top-visited-posts' ) ),
+					array( '@media (min-width: 480px)', __( 'Small phones: slightly larger padding, thumbnails (56px), grid → 2 columns.', 'top-visited-posts' ) ),
+					array( '@media (min-width: 768px)', __( 'Tablets: larger spacing, thumbnails (64px), list excerpt visible, grid → 2 columns.', 'top-visited-posts' ) ),
+					array( '@media (min-width: 1024px)', __( 'Desktop: full padding, thumbnails (72px), grid → configured column count.', 'top-visited-posts' ) ),
+					array( '@media (min-width: 1280px)', __( 'Wide screens: slightly larger title, grid card aspect ratio adjusted.', 'top-visited-posts' ) ),
 				)
 			);
 
@@ -178,9 +181,9 @@ class TVP_Docs {
 				__( 'Media Query Modifiers', 'top-visited-posts' ),
 				__( 'Automatic adaptations for user/system preferences.', 'top-visited-posts' ),
 				array(
-					array( '@media (prefers-reduced-motion: reduce)',  __( 'Disables scroll highlight animation and hover transitions.', 'top-visited-posts' ) ),
-					array( '@media (prefers-color-scheme: dark)',       __( 'Overrides all CSS custom properties for dark backgrounds, lighter text, and muted accent.', 'top-visited-posts' ) ),
-					array( '@media print',                              __( 'Removes backgrounds, shadows, and hover effects for clean printing.', 'top-visited-posts' ) ),
+					array( '@media (prefers-reduced-motion: reduce)', __( 'Disables scroll highlight animation and hover transitions.', 'top-visited-posts' ) ),
+					array( '@media (prefers-color-scheme: dark)', __( 'Overrides all CSS custom properties for dark backgrounds, lighter text, and muted accent.', 'top-visited-posts' ) ),
+					array( '@media print', __( 'Removes backgrounds, shadows, and hover effects for clean printing.', 'top-visited-posts' ) ),
 				)
 			);
 
@@ -188,9 +191,9 @@ class TVP_Docs {
 				__( 'RTL Support', 'top-visited-posts' ),
 				__( 'Activated automatically when WordPress uses an RTL locale. No settings needed.', 'top-visited-posts' ),
 				array(
-					array( '[dir="rtl"] .tvp-section',      __( 'Sets text-align: right on the section.', 'top-visited-posts' ) ),
-					array( '[dir="rtl"] .tvp-post-link',     __( 'Reverses flex direction to row-reverse so items flow right-to-left.', 'top-visited-posts' ) ),
-					array( '.tvp-section[dir="rtl"]',         __( 'Same as above — also matches when dir is on the section element itself.', 'top-visited-posts' ) ),
+					array( '[dir="rtl"] .tvp-section', __( 'Sets text-align: right on the section.', 'top-visited-posts' ) ),
+					array( '[dir="rtl"] .tvp-post-link', __( 'Reverses flex direction to row-reverse so items flow right-to-left.', 'top-visited-posts' ) ),
+					array( '.tvp-section[dir="rtl"]', __( 'Same as above — also matches when dir is on the section element itself.', 'top-visited-posts' ) ),
 				)
 			);
 
@@ -201,8 +204,10 @@ class TVP_Docs {
 					<?php esc_html_e( 'Example: Custom Theme Override', 'top-visited-posts' ); ?>
 				</h2>
 				<p><?php esc_html_e( 'Add this to your theme CSS or Customizer → Additional CSS to customize the TVP appearance:', 'top-visited-posts' ); ?></p>
-				<pre style="background:#f6f7f7;padding:16px;border-radius:4px;overflow-x:auto;font-size:13px;line-height:1.6;border:1px solid #dcdcde;"><code><?php echo esc_html(
-'/* Change the color scheme */
+				<pre style="background:#f6f7f7;padding:16px;border-radius:4px;overflow-x:auto;font-size:13px;line-height:1.6;border:1px solid #dcdcde;"><code>
+				<?php
+				echo esc_html(
+					'/* Change the color scheme */
 .tvp-section {
     --tvp-bg: #ffffff;
     --tvp-accent: #0073aa;
@@ -234,7 +239,9 @@ class TVP_Docs {
 .tvp-post-featured .tvp-post-link {
     background-color: #fcf0f1;
 }'
-				); ?></code></pre>
+				);
+				?>
+				</code></pre>
 			</div>
 		</div>
 		<?php
@@ -276,7 +283,18 @@ class TVP_Docs {
 								<td><code style="font-size:12px;background:#f0f0f1;padding:2px 6px;border-radius:3px;"><?php echo esc_html( $row[1] ); ?></code></td>
 								<td><?php echo esc_html( $row[2] ); ?></td>
 							<?php else : ?>
-								<td><?php echo wp_kses( $row[1], array( 'code' => array(), 'strong' => array(), 'em' => array() ) ); ?></td>
+								<td>
+								<?php
+								echo wp_kses(
+									$row[1],
+									array(
+										'code'   => array(),
+										'strong' => array(),
+										'em'     => array(),
+									)
+								);
+								?>
+									</td>
 							<?php endif; ?>
 						</tr>
 					<?php endforeach; ?>
