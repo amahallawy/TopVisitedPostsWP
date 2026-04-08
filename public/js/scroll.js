@@ -37,7 +37,7 @@
 		// Build a lookup keyed by normalised pathname.
 		var lookup = {};
 		for ( var permalink in map ) {
-			if ( map.hasOwnProperty( permalink ) ) {
+			if ( Object.prototype.hasOwnProperty.call( map, permalink ) ) {
 				lookup[ normalise( permalink ) ] = map[ permalink ];
 			}
 		}
@@ -88,7 +88,7 @@
 				if ( match ) {
 					var pid = match[1];
 					for ( var href in lookup ) {
-						if ( lookup.hasOwnProperty( href ) && String( lookup[ href ] ) === pid ) {
+						if ( Object.prototype.hasOwnProperty.call( lookup, href ) && String( lookup[ href ] ) === pid ) {
 							article.id = 'tvp-post-' + pid;
 							delete lookup[ href ];
 							break;
