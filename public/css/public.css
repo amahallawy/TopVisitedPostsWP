@@ -1,0 +1,504 @@
+/**
+ * Top Visited Posts — Public Styles
+ *
+ * Mobile-first responsive design with automatic RTL support.
+ * Layouts: list (default) and grid.
+ * Breakpoints: 480px (small), 768px (tablet), 1024px (desktop), 1280px (wide).
+ */
+
+/* =========================================================================
+   CSS Custom Properties
+   ========================================================================= */
+.tvp-section {
+	--tvp-bg: #f9fafb;
+	--tvp-border: #e5e7eb;
+	--tvp-title-color: #111827;
+	--tvp-text-color: #1f2937;
+	--tvp-meta-color: #6b7280;
+	--tvp-accent: #4f46e5;
+	--tvp-hover-bg: #eef2ff;
+	--tvp-featured-bg: #fffbeb;
+	--tvp-featured-border: #f59e0b;
+	--tvp-radius: 8px;
+	--tvp-columns: 3;
+}
+
+/* =========================================================================
+   Section Container
+   ========================================================================= */
+.tvp-section {
+	margin: 1.5em 0;
+	padding: 1em;
+	background: var(--tvp-bg);
+	border: 1px solid var(--tvp-border);
+	border-radius: var(--tvp-radius);
+	box-sizing: border-box;
+	width: 100%;
+}
+
+.tvp-section-title {
+	font-size: 1.15em;
+	font-weight: 700;
+	margin: 0 0 0.75em;
+	padding-bottom: 0.5em;
+	border-bottom: 2px solid var(--tvp-border);
+	color: var(--tvp-title-color);
+	line-height: 1.3;
+}
+
+/* =========================================================================
+   Post List — Shared base
+   ========================================================================= */
+.tvp-post-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.tvp-post-item {
+	margin-bottom: 0;
+}
+
+/* Featured post indicator */
+.tvp-post-featured {
+	border-inline-start: 3px solid var(--tvp-featured-border);
+}
+
+.tvp-post-featured .tvp-post-link {
+	background-color: var(--tvp-featured-bg);
+}
+
+/* =========================================================================
+   Post Link — Touch-friendly tap target (min 44px height)
+   ========================================================================= */
+.tvp-post-link {
+	display: flex;
+	align-items: center;
+	gap: 0.75em;
+	padding: 0.75em 0.5em;
+	min-height: 44px;
+	text-decoration: none;
+	color: inherit;
+	transition: background-color 0.2s ease, box-shadow 0.2s ease;
+	border-radius: 6px;
+	box-sizing: border-box;
+	flex-wrap: wrap;
+}
+
+.tvp-post-link:hover,
+.tvp-post-link:focus-visible {
+	background-color: var(--tvp-hover-bg);
+	text-decoration: none;
+	color: inherit;
+	outline: none;
+	box-shadow: 0 0 0 2px var(--tvp-accent);
+}
+
+/* =========================================================================
+   Rank Badge
+   ========================================================================= */
+.tvp-rank-badge {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	width: 28px;
+	height: 28px;
+	border-radius: 50%;
+	background: var(--tvp-border);
+	color: var(--tvp-meta-color);
+	font-size: 0.75em;
+	font-weight: 700;
+	line-height: 1;
+}
+
+/* =========================================================================
+   Thumbnail
+   ========================================================================= */
+.tvp-post-thumb {
+	flex-shrink: 0;
+	width: 48px;
+	height: 48px;
+	border-radius: 6px;
+	overflow: hidden;
+}
+
+.tvp-post-thumb img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+/* =========================================================================
+   Post Content Elements (rendered in user-configured order)
+   ========================================================================= */
+.tvp-post-title {
+	font-weight: 600;
+	font-size: 0.9em;
+	color: var(--tvp-text-color);
+	line-height: 1.3;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	flex: 1 1 100%;
+	min-width: 0;
+}
+
+.tvp-post-excerpt {
+	font-size: 0.8em;
+	color: var(--tvp-meta-color);
+	line-height: 1.4;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	flex: 1 1 100%;
+}
+
+.tvp-post-date,
+.tvp-post-views {
+	font-size: 0.78em;
+	color: var(--tvp-meta-color);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.tvp-post-views strong {
+	color: var(--tvp-accent);
+	font-weight: 600;
+}
+
+/* =========================================================================
+   LIST LAYOUT — Default (mobile-first)
+   ========================================================================= */
+.tvp-layout-list .tvp-post-item {
+	border-bottom: 1px solid var(--tvp-border);
+}
+
+.tvp-layout-list .tvp-post-item:last-child {
+	border-bottom: none;
+}
+
+/* Excerpt hidden in list on small screens to save space */
+.tvp-layout-list .tvp-post-excerpt {
+	display: none;
+}
+
+/* =========================================================================
+   GRID LAYOUT — Mobile stacks to single column
+   ========================================================================= */
+.tvp-layout-grid .tvp-post-list {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 0.75em;
+}
+
+.tvp-layout-grid .tvp-post-item {
+	border: 1px solid var(--tvp-border);
+	border-radius: var(--tvp-radius);
+	background: #fff;
+	overflow: hidden;
+	position: relative;
+}
+
+.tvp-layout-grid .tvp-post-link {
+	flex-direction: column;
+	align-items: stretch;
+	padding: 0;
+	gap: 0;
+}
+
+.tvp-layout-grid .tvp-rank-badge {
+	position: absolute;
+	top: 0.5em;
+	inset-inline-start: 0.5em;
+	z-index: 1;
+	width: 26px;
+	height: 26px;
+	font-size: 0.7em;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.tvp-layout-grid .tvp-post-thumb {
+	width: 100%;
+	height: 0;
+	padding-bottom: 56.25%; /* 16:9 ratio */
+	border-radius: 0;
+	position: relative;
+}
+
+.tvp-layout-grid .tvp-post-thumb img {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.tvp-layout-grid .tvp-post-title,
+.tvp-layout-grid .tvp-post-excerpt,
+.tvp-layout-grid .tvp-post-date,
+.tvp-layout-grid .tvp-post-views {
+	padding: 0.25em 0.75em;
+}
+
+.tvp-layout-grid .tvp-post-title {
+	padding-top: 0.75em;
+}
+
+/* When there is no thumbnail in grid, shift content to avoid rank badge overlap */
+.tvp-layout-grid .tvp-post-link > .tvp-rank-badge + .tvp-post-title {
+	padding-inline-start: 2.75em;
+}
+
+.tvp-layout-grid .tvp-post-excerpt {
+	display: -webkit-box;
+}
+
+/* =========================================================================
+   Scroll Highlight Animation
+   ========================================================================= */
+.tvp-scroll-highlight {
+	animation: tvp-highlight-pulse 2s ease-out;
+}
+
+@keyframes tvp-highlight-pulse {
+	0% {
+		background-color: #fef3c7;
+		box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.3);
+	}
+	100% {
+		background-color: transparent;
+		box-shadow: 0 0 0 0 transparent;
+	}
+}
+
+/* =========================================================================
+   BREAKPOINT — Small phones (480px+)
+   ========================================================================= */
+@media (min-width: 480px) {
+	.tvp-section {
+		padding: 1.25em;
+	}
+
+	.tvp-section-title {
+		font-size: 1.25em;
+	}
+
+	.tvp-post-thumb {
+		width: 56px;
+		height: 56px;
+	}
+
+	.tvp-post-title {
+		font-size: 0.95em;
+	}
+
+	/* Grid: 2 columns on large phones */
+	.tvp-layout-grid .tvp-post-list {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+/* =========================================================================
+   BREAKPOINT — Tablets (768px+)
+   ========================================================================= */
+@media (min-width: 768px) {
+	.tvp-section {
+		padding: 1.5em;
+		margin: 2em 0;
+	}
+
+	.tvp-section-title {
+		font-size: 1.35em;
+		margin-bottom: 1em;
+	}
+
+	.tvp-post-link {
+		gap: 1em;
+		padding: 0.85em 0.75em;
+	}
+
+	.tvp-rank-badge {
+		width: 32px;
+		height: 32px;
+		font-size: 0.8em;
+	}
+
+	.tvp-post-thumb {
+		width: 64px;
+		height: 64px;
+	}
+
+	.tvp-post-title {
+		font-size: 1em;
+	}
+
+	.tvp-post-excerpt {
+		font-size: 0.85em;
+	}
+
+	.tvp-post-date,
+	.tvp-post-views {
+		font-size: 0.82em;
+	}
+
+	/* List: show excerpt on tablets */
+	.tvp-layout-list .tvp-post-excerpt {
+		display: -webkit-box;
+	}
+
+	/* Grid: 2 columns on tablets */
+	.tvp-layout-grid .tvp-post-list {
+		grid-template-columns: repeat(2, 1fr);
+		gap: 1em;
+	}
+}
+
+/* =========================================================================
+   BREAKPOINT — Desktop (1024px+)
+   ========================================================================= */
+@media (min-width: 1024px) {
+	.tvp-section {
+		padding: 2em;
+		border-radius: 12px;
+	}
+
+	.tvp-section-title {
+		font-size: 1.4em;
+	}
+
+	.tvp-post-thumb {
+		width: 72px;
+		height: 72px;
+		border-radius: 8px;
+	}
+
+	.tvp-post-link {
+		gap: 1.15em;
+		padding: 1em 0.85em;
+	}
+
+	/* Grid: use configured columns on desktop */
+	.tvp-layout-grid .tvp-post-list {
+		grid-template-columns: repeat(var(--tvp-columns), 1fr);
+		gap: 1.25em;
+	}
+
+	.tvp-layout-grid .tvp-rank-badge {
+		width: 30px;
+		height: 30px;
+		font-size: 0.75em;
+	}
+}
+
+/* =========================================================================
+   BREAKPOINT — Wide screens (1280px+)
+   ========================================================================= */
+@media (min-width: 1280px) {
+	.tvp-post-title {
+		font-size: 1.05em;
+	}
+
+	.tvp-post-link {
+		gap: 1.25em;
+	}
+
+	.tvp-layout-grid .tvp-post-thumb {
+		padding-bottom: 60%; /* slightly taller cards on wide screens */
+	}
+}
+
+/* =========================================================================
+   Print Styles
+   ========================================================================= */
+@media print {
+	.tvp-section {
+		border: 1px solid #ccc;
+		box-shadow: none;
+		background: #fff;
+	}
+
+	.tvp-post-link:hover,
+	.tvp-post-link:focus-visible {
+		background: none;
+		box-shadow: none;
+	}
+}
+
+/* =========================================================================
+   Reduced Motion — respect user preference
+   ========================================================================= */
+@media (prefers-reduced-motion: reduce) {
+	.tvp-scroll-highlight {
+		animation: none;
+	}
+
+	.tvp-post-link {
+		transition: none;
+	}
+}
+
+/* =========================================================================
+   Dark Mode — auto-detect via prefers-color-scheme
+   ========================================================================= */
+@media (prefers-color-scheme: dark) {
+	.tvp-section {
+		--tvp-bg: #1f2937;
+		--tvp-border: #374151;
+		--tvp-title-color: #f3f4f6;
+		--tvp-text-color: #e5e7eb;
+		--tvp-meta-color: #9ca3af;
+		--tvp-accent: #818cf8;
+		--tvp-hover-bg: #374151;
+		--tvp-featured-bg: #292524;
+		--tvp-featured-border: #d97706;
+	}
+
+	.tvp-layout-grid .tvp-post-item {
+		background: #111827;
+	}
+}
+
+/* =========================================================================
+   RTL Support — automatic via dir="rtl" or [dir="rtl"] ancestor
+   No settings needed: WordPress sets dir="rtl" on <html> for RTL locales.
+   We use logical properties throughout (inset-inline-start, border-inline-start,
+   padding-inline, margin-inline) so layout flips automatically.
+   This section handles any remaining physical-property overrides.
+   ========================================================================= */
+[dir="rtl"] .tvp-section,
+.tvp-section[dir="rtl"] {
+	text-align: right;
+}
+
+[dir="rtl"] .tvp-post-link,
+.tvp-section[dir="rtl"] .tvp-post-link {
+	flex-direction: row-reverse;
+}
+
+[dir="rtl"] .tvp-layout-grid .tvp-post-link,
+.tvp-section[dir="rtl"] .tvp-layout-grid .tvp-post-link {
+	flex-direction: column;
+	align-items: stretch;
+}
+
+[dir="rtl"] .tvp-post-title,
+[dir="rtl"] .tvp-post-excerpt,
+.tvp-section[dir="rtl"] .tvp-post-title,
+.tvp-section[dir="rtl"] .tvp-post-excerpt {
+	text-align: right;
+}
+
+[dir="rtl"] .tvp-post-date,
+[dir="rtl"] .tvp-post-views,
+.tvp-section[dir="rtl"] .tvp-post-date,
+.tvp-section[dir="rtl"] .tvp-post-views {
+	text-align: right;
+	direction: rtl;
+}
