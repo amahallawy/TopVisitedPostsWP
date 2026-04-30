@@ -1,0 +1,37 @@
+{
+    "name": "top-visited-posts",
+    "version": "1.0.0",
+    "description": "WordPress plugin that tracks post views and displays a ranked, configurable section of top visited posts.",
+    "private": true,
+    "license": "GPL-2.0-or-later",
+    "homepage": "https://github.com/amahallawy/TopVisitedPostsWP",
+    "scripts": {
+        "lint:js": "eslint \"**/*.js\" --ignore-pattern node_modules --ignore-pattern vendor"
+    },
+    "devDependencies": {
+        "eslint": "^8.57.0"
+    },
+    "eslintConfig": {
+        "root": true,
+        "extends": ["eslint:recommended"],
+        "parserOptions": {
+            "ecmaVersion": 2022,
+            "sourceType": "script"
+        },
+        "env": {
+            "browser": true,
+            "jquery": true,
+            "es2022": true
+        },
+        "globals": {
+            "wp": "readonly",
+            "ajaxurl": "readonly",
+            "tvpScroll": "readonly",
+            "tvpTracker": "readonly"
+        },
+        "rules": {
+            "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+            "no-empty": ["error", { "allowEmptyCatch": true }]
+        }
+    }
+}

@@ -1,0 +1,89 @@
+/**
+ * Top Visited Posts — Admin Styles
+ */
+
+.tvp-settings-wrap {
+	max-width: 800px;
+}
+
+.tvp-settings-card {
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	padding: 20px 24px;
+	margin-top: 20px;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.tvp-settings-card h2 {
+	margin-top: 0;
+	padding-top: 0;
+	border-bottom: 1px solid #eee;
+	padding-bottom: 12px;
+}
+
+.tvp-settings-card .form-table th {
+	padding-left: 0;
+}
+
+.tvp-select {
+	min-width: 300px;
+}
+
+.tvp-shortcode-info code {
+	display: inline-block;
+	background: #f0f0f1;
+	padding: 6px 14px;
+	font-size: 14px;
+	border-radius: 3px;
+	margin: 6px 0;
+}
+
+/* =========================================================================
+   Sortable Elements List
+   ========================================================================= */
+.tvp-elements-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	max-width: 320px;
+}
+
+.tvp-element-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 10px;
+	margin-bottom: 4px;
+	background: #f6f7f7;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+	cursor: default;
+}
+
+.tvp-element-item label {
+	flex: 1;
+	margin: 0;
+	cursor: pointer;
+}
+
+.tvp-drag-handle {
+	cursor: grab;
+	color: #888;
+	flex-shrink: 0;
+}
+
+.tvp-drag-handle:active {
+	cursor: grabbing;
+}
+
+.tvp-element-item.ui-sortable-helper {
+	background: #fff;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.tvp-element-item.ui-sortable-placeholder {
+	visibility: visible !important;
+	background: #e8f0fe;
+	border: 1px dashed #4f46e5;
+}

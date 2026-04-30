@@ -1,0 +1,50 @@
+name: Security
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Weekly full-history scan — catches secrets that slipped in historically
+    - cron: '0 6 * * 1'
+
+permissions:
+  contents: read
+  security-events: write  # CodeQL needs this to upload results
+
+jobs:
+  secrets:
+    name: TruffleHog secrets scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (full history)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run TruffleHog
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          # Verified-only reduces false positives; switch to `--results=verified,unknown`
+          # if you want broader coverage at the cost of noise.
+          extra_args: --results=verified --fail
+
+  codeql:
+    name: CodeQL (PHP)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: php
+          queries: security-and-quality
+
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: /language:php

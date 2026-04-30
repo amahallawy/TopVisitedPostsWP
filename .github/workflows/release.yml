@@ -1,0 +1,66 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write  # Required to create releases
+
+jobs:
+  build:
+    name: Build plugin zip and create release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout into plugin-named subdir
+        # Checkout into `top-visited-posts/` so the zip has the correct
+        # top-level folder when users extract it into wp-content/plugins/.
+        uses: actions/checkout@v4
+        with:
+          path: top-visited-posts
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          coverage: none
+          tools: composer:v2
+
+      # No runtime composer dependencies today (require is just php>=7.4),
+      # so we skip `composer install`. If that changes, uncomment the step
+      # below and make sure .gitignore excludes vendor/.
+      #
+      # - name: Install production PHP dependencies
+      #   working-directory: top-visited-posts
+      #   run: composer install --no-dev --prefer-dist --no-progress --optimize-autoloader
+
+      - name: Build release zip
+        run: |
+          zip -r top-visited-posts.zip top-visited-posts \
+            -x 'top-visited-posts/.git/*' \
+            -x 'top-visited-posts/.github/*' \
+            -x 'top-visited-posts/.gitignore' \
+            -x 'top-visited-posts/node_modules/*' \
+            -x 'top-visited-posts/vendor/*' \
+            -x 'top-visited-posts/tests/*' \
+            -x 'top-visited-posts/composer.json' \
+            -x 'top-visited-posts/composer.lock' \
+            -x 'top-visited-posts/package.json' \
+            -x 'top-visited-posts/package-lock.json' \
+            -x 'top-visited-posts/phpcs.xml.dist' \
+            -x 'top-visited-posts/.DS_Store'
+
+      - name: Verify zip contents
+        run: |
+          echo "Zip contents:"
+          unzip -l top-visited-posts.zip
+          echo "Zip size: $(du -h top-visited-posts.zip | cut -f1)"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: top-visited-posts.zip
+          generate_release_notes: true
+          draft: false
+          prerelease: false
