@@ -9,7 +9,7 @@ A WordPress plugin that tracks post views and displays a ranked, configurable se
 
 Built for sites that organize content by category on dedicated pages (e.g. a "News" or "Articles" page rendered with Spectra Post Grid or a theme template). Instead of opening the individual post, clicking a top-posts item takes the visitor to the category page and scrolls the matching card into view with a brief highlight.
 
-- **Version:** 1.0.0
+- **Version:** 0.1.1
 - **Requires WordPress:** 5.8 or newer
 - **Requires PHP:** 7.4 or newer
 - **License:** GPL-2.0-or-later
@@ -339,6 +339,9 @@ No orphaned data is left behind.
 ---
 
 ## Changelog
+
+### 0.1.1 — Scroll-to-post fix
+- Fix: scroll-to-post now works on target pages whose post cards have no permalink link (e.g. some Spectra Loop Builder templates), via diacritic-insensitive post-title matching as a fallback
 
 ### 1.0.0 — Initial release
 - Automatic post view tracking (AJAX, session-deduped)
