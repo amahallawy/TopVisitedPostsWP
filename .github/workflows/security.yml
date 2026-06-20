@@ -33,9 +33,11 @@ jobs:
           # event-based scan (push commit range / full default-branch scan).
           base: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || '' }}
           head: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || '' }}
+          # The action already adds `--fail` itself, so it must NOT be repeated
+          # here (doing so errors with "flag 'fail' cannot be repeated").
           # Verified-only reduces false positives; switch to `--results=verified,unknown`
           # if you want broader coverage at the cost of noise.
-          extra_args: --results=verified --fail
+          extra_args: --results=verified
 
   codeql:
     name: CodeQL (JavaScript)
