@@ -34,11 +34,41 @@
 			}
 		}
 
+		// Normalise a title for diacritic-insensitive matching. Mirrors
+		// TVP_Public::normalise_title() in PHP: NFC-normalise, strip Arabic
+		// diacritics (tashkeel) and tatweel, and collapse whitespace.
+		function normaliseTitle( text ) {
+			var s = ( text || '' ).toString();
+			if ( typeof s.normalize === 'function' ) {
+				s = s.normalize( 'NFC' );
+			}
+			// Arabic diacritics (tashkeel) and tatweel/kashida.
+			s = s.replace(
+				// Matching these combining marks individually is intentional \u2014
+				// the whole point is to strip them from the title.
+				// eslint-disable-next-line no-misleading-character-class
+				/[\u0610-\u061A\u0640\u064B-\u065F\u0670\u06D6-\u06ED\u08D3-\u08FF\uFE70-\uFE7F]/gu,
+				''
+			);
+			return s.replace( /\s+/g, ' ' ).trim();
+		}
+
 		// Build a lookup keyed by normalised pathname.
 		var lookup = {};
 		for ( var permalink in map ) {
 			if ( Object.prototype.hasOwnProperty.call( map, permalink ) ) {
 				lookup[ normalise( permalink ) ] = map[ permalink ];
+			}
+		}
+
+		// Build a title lookup for the fallback strategy (used when post cards
+		// carry no permalink link). Keyed by normalised title; see
+		// normaliseTitle() — must match TVP_Public::normalise_title() in PHP.
+		var titleLookup = {};
+		var titleMap    = tvpScroll.titleMap || {};
+		for ( var title in titleMap ) {
+			if ( Object.prototype.hasOwnProperty.call( titleMap, title ) ) {
+				titleLookup[ normaliseTitle( title ) ] = titleMap[ title ];
 			}
 		}
 
@@ -71,6 +101,34 @@
 					card.id = 'tvp-post-' + postId;
 				}
 				delete lookup[ key ];
+			}
+		}
+
+		// --- Strategy 1b: Title-based matching for link-less cards ---
+		// Some page-builder loop templates (e.g. a Spectra Loop Builder card
+		// whose title is not linked) render post cards with no <a href> and no
+		// post-{id} class, so Strategy 1 cannot match them. Fall back to matching
+		// the card's heading text against the localised title map.
+		if ( Object.keys( titleLookup ).length > 0 ) {
+			for ( var c = 0; c < cards.length; c++ ) {
+				var tCard = cards[ c ];
+				if ( tCard.id && tCard.id.indexOf( 'tvp-post-' ) === 0 ) {
+					continue; // Already tagged by Strategy 1.
+				}
+				var headings = tCard.querySelectorAll(
+					'.wp-block-post-title, .entry-title, .uagb-post__title, .uagb-heading-text, h1, h2, h3, h4, h5, h6'
+				);
+				for ( var h = 0; h < headings.length; h++ ) {
+					var tKey = normaliseTitle( headings[ h ].textContent );
+					if ( tKey && titleLookup[ tKey ] ) {
+						var tId = parseInt( titleLookup[ tKey ], 10 );
+						if ( tId > 0 ) {
+							tCard.id = 'tvp-post-' + tId;
+						}
+						delete titleLookup[ tKey ];
+						break; // Stop at the first matching heading in this card.
+					}
+				}
 			}
 		}
 
