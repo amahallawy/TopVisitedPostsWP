@@ -48,8 +48,9 @@ class TVP_Public {
 		$page_id = isset( $options['page_id'] ) ? absint( $options['page_id'] ) : 0;
 
 		if ( $page_id && is_page( $page_id ) ) {
-			$category = isset( $options['category'] ) ? absint( $options['category'] ) : 0;
-			$post_map = array();
+			$category  = isset( $options['category'] ) ? absint( $options['category'] ) : 0;
+			$post_map  = array();
+			$title_map = array();
 
 			if ( $category ) {
 				$posts = get_posts(
@@ -64,6 +65,15 @@ class TVP_Public {
 
 				foreach ( $posts as $pid ) {
 					$post_map[ get_permalink( $pid ) ] = $pid;
+
+					// Fallback key for target pages whose post cards have no
+					// permalink link (e.g. some page-builder loop templates):
+					// match by normalised title instead. Keyed identically to
+					// the JS side (see normaliseTitle() in scroll.js).
+					$title_key = self::normalise_title( get_the_title( $pid ) );
+					if ( '' !== $title_key ) {
+						$title_map[ $title_key ] = $pid;
+					}
 				}
 			}
 
@@ -71,10 +81,45 @@ class TVP_Public {
 				'tvp-scroll',
 				'tvpScroll',
 				array(
-					'postMap' => $post_map,
+					'postMap'  => $post_map,
+					'titleMap' => $title_map,
 				)
 			);
 		}
+	}
+
+	/**
+	 * Normalise a post title for fallback matching against card headings.
+	 *
+	 * Must stay byte-for-byte equivalent to normaliseTitle() in scroll.js:
+	 * decode entities, NFC-normalise (when intl is available), strip Arabic
+	 * diacritics (tashkeel) and tatweel, and collapse whitespace. This makes
+	 * matching tolerant of diacritic differences between the stored title and
+	 * the rendered card text.
+	 *
+	 * @param string $title Raw post title.
+	 * @return string Normalised title key.
+	 */
+	public static function normalise_title( $title ) {
+		$title = html_entity_decode( (string) $title, ENT_QUOTES, 'UTF-8' );
+
+		if ( class_exists( 'Normalizer' ) ) {
+			$normalised = Normalizer::normalize( $title, Normalizer::FORM_C );
+			if ( false !== $normalised ) {
+				$title = $normalised;
+			}
+		}
+
+		// Strip Arabic diacritics (tashkeel) and tatweel/kashida. The class is
+		// concatenated only to keep line length down; the pattern is unchanged.
+		$diacritics = '/[\x{0610}-\x{061A}\x{0640}\x{064B}-\x{065F}\x{0670}'
+			. '\x{06D6}-\x{06ED}\x{08D3}-\x{08FF}\x{FE70}-\x{FE7F}]/u';
+		$title      = preg_replace( $diacritics, '', $title );
+
+		// Collapse all whitespace runs to a single space and trim.
+		$title = preg_replace( '/\s+/u', ' ', $title );
+
+		return trim( (string) $title );
 	}
 
 	/**
