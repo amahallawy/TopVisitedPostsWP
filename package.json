@@ -1,6 +1,6 @@
 {
     "name": "top-visited-posts",
-    "version": "1.0.0",
+    "version": "0.1.1",
     "description": "WordPress plugin that tracks post views and displays a ranked, configurable section of top visited posts.",
     "private": true,
     "license": "GPL-2.0-or-later",
