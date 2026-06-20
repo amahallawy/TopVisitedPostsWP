@@ -27,24 +27,33 @@ jobs:
         uses: trufflesecurity/trufflehog@main
         with:
           path: ./
+          # On pull_request, scan the PR diff using explicit base/head so the
+          # action doesn't abort with "BASE and HEAD commits are the same".
+          # On push/schedule these stay empty and the action falls back to its
+          # event-based scan (push commit range / full default-branch scan).
+          base: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || '' }}
+          head: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || '' }}
           # Verified-only reduces false positives; switch to `--results=verified,unknown`
           # if you want broader coverage at the cost of noise.
           extra_args: --results=verified --fail
 
   codeql:
-    name: CodeQL (PHP)
+    name: CodeQL (JavaScript)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # CodeQL has no PHP support; the plugin's JavaScript (public/js, admin/js)
+      # is what CodeQL can actually analyse. PHP static-analysis coverage is a
+      # separate follow-up (see issue tracker).
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: php
+          languages: javascript
           queries: security-and-quality
 
       - name: Perform CodeQL analysis
         uses: github/codeql-action/analyze@v3
         with:
-          category: /language:php
+          category: /language:javascript
