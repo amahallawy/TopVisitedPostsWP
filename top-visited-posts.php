@@ -3,7 +3,7 @@
  * Plugin Name:       Top Visited Posts
  * Plugin URI:        https://example.com/top-visited-posts
  * Description:       Display a configurable section of top visited posts by category with smooth scroll-to-post navigation.
- * Version:           0.1.1
+ * Version:           0.2.0
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            Mahallawy
@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Plugin constants.
  */
-define( 'TVP_VERSION', '0.1.1' );
+define( 'TVP_VERSION', '0.2.0' );
 define( 'TVP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'TVP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'TVP_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );

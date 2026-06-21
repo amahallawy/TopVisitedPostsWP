@@ -4,7 +4,7 @@ Tags: popular posts, top posts, most viewed, analytics, scroll
 Requires at least: 5.8
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 0.1.1
+Stable tag: 0.2.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,6 +20,7 @@ Display a configurable section of top visited posts by category with smooth scro
 * Configurable category filter
 * Target page selection — clicking a top post navigates to the page and scrolls to center the post
 * Customizable section title and post count
+* Configurable excerpt length (word count) with optional line-break preservation
 * Shortcode `[top_visited_posts]` for flexible placement
 * Auto-insert on your configured target page
 * Clean, responsive design with hover effects and highlight animation
@@ -47,6 +48,11 @@ Either configure a target page in settings (it auto-appends) or use the `[top_vi
 You're taken to the configured target page, and the browser smoothly scrolls to center that post on screen with a brief highlight animation.
 
 == Changelog ==
+
+= 0.2.0 =
+* Add configurable excerpt word count (default 20, replacing the previous fixed 12-word trim).
+* Add option to preserve line breaks and blank lines in the excerpt.
+* The excerpt length and preserve-breaks fields are disabled in settings when the Excerpt element is not selected.
 
 = 0.1.1 =
 * Fix: scroll-to-post now works on target pages whose post cards have no permalink link (e.g. some Spectra Loop Builder templates) by matching cards on a normalised, diacritic-insensitive post title.
