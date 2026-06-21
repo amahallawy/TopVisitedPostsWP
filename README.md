@@ -9,7 +9,7 @@ A WordPress plugin that tracks post views and displays a ranked, configurable se
 
 Built for sites that organize content by category on dedicated pages (e.g. a "News" or "Articles" page rendered with Spectra Post Grid or a theme template). Instead of opening the individual post, clicking a top-posts item takes the visitor to the category page and scrolls the matching card into view with a brief highlight.
 
-- **Version:** 0.1.1
+- **Version:** 0.2.0
 - **Requires WordPress:** 5.8 or newer
 - **Requires PHP:** 7.4 or newer
 - **License:** GPL-2.0-or-later
@@ -37,6 +37,7 @@ Pick any combination of criteria and drag to set priority. The first criterion i
 - Post count from 1 to 50
 - Customizable section heading (leave blank to hide)
 - Optional numbered rank badges (1, 2, 3…)
+- Configurable excerpt length (1–100 words) with an optional preserve-line-breaks toggle; both controls disable automatically when the Excerpt element is off
 - Two layouts:
   - **List** — compact vertical rows, good for sidebars and narrow containers
   - **Grid** — card layout with prominent thumbnails, 2–4 columns on desktop
@@ -45,7 +46,7 @@ Pick any combination of criteria and drag to set priority. The first criterion i
 Each of the following can be enabled/disabled and dragged to change the rendering order inside each post card:
 - Thumbnail (featured image)
 - Title
-- Excerpt (first 12 words, truncated to 2 lines)
+- Excerpt (configurable word count, default 20; truncated to 2 lines unless line-break preservation is enabled)
 - Relative date ("2 hours ago", "5 days ago")
 - View count
 
@@ -204,7 +205,8 @@ Each element is a `<span>` rendered in the order configured in settings. Element
 | Selector | Description |
 |---|---|
 | `.tvp-post-title` | Post title. Truncated to 2 lines with text-overflow ellipsis. Uses `--tvp-text-color`. |
-| `.tvp-post-excerpt` | Post excerpt (first 12 words). Truncated to 2 lines. Hidden in list layout on mobile, visible on tablet and up. |
+| `.tvp-post-excerpt` | Post excerpt (configurable word count, default 20). Truncated to 2 lines. Hidden in list layout on mobile, visible on tablet and up. |
+| `.tvp-post-excerpt--preserve-breaks` | Excerpt variant when "Preserve Line Breaks" is enabled. Uses `white-space: pre-line` and shows all lines (no 2-line clamp). |
 | `.tvp-post-date` | Relative date ("2 hours ago", "5 days ago"). Uses `--tvp-meta-color`. |
 | `.tvp-post-views` | View count display ("42 views"). |
 | `.tvp-post-views strong` | The numeric view count. Styled with `--tvp-accent`. |
@@ -339,6 +341,11 @@ No orphaned data is left behind.
 ---
 
 ## Changelog
+
+### 0.2.0 — Configurable excerpt
+- Add configurable excerpt word count (default 20, replacing the previous fixed 12-word trim)
+- Add option to preserve line breaks and blank lines in the excerpt
+- Excerpt length and preserve-breaks fields disable automatically when the Excerpt element is not selected
 
 ### 0.1.1 — Scroll-to-post fix
 - Fix: scroll-to-post now works on target pages whose post cards have no permalink link (e.g. some Spectra Loop Builder templates), via diacritic-insensitive post-title matching as a fallback

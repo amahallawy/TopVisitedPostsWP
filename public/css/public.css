@@ -159,6 +159,12 @@
 	flex: 1 1 100%;
 }
 
+.tvp-post-excerpt--preserve-breaks {
+	display: block;
+	white-space: pre-line; /* honour preserved line breaks */
+	-webkit-line-clamp: none; /* show all lines, not just 2 */
+}
+
 .tvp-post-date,
 .tvp-post-views {
 	font-size: 0.78em;

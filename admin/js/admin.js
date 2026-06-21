@@ -29,5 +29,21 @@
 				}
 			});
 		});
+
+		// Enable/disable the excerpt-dependent fields based on whether the
+		// excerpt element is checked in the elements list.
+		var $excerptCheckbox = $( '#tvp-elements-sortable .tvp-element-checkbox[value="excerpt"]' );
+		var $dependents = $( '.tvp-excerpt-dependent, .tvp-excerpt-dependent-hidden' );
+
+		function syncExcerptDependents() {
+			var enabled = $excerptCheckbox.length ? $excerptCheckbox.is( ':checked' ) : false;
+			$dependents.prop( 'disabled', ! enabled );
+		}
+
+		// Initial state on page load.
+		syncExcerptDependents();
+
+		// Update whenever the excerpt checkbox changes.
+		$excerptCheckbox.on( 'change', syncExcerptDependents );
 	});
 })( jQuery );

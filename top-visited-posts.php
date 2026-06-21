@@ -3,7 +3,7 @@
  * Plugin Name:       Top Visited Posts
  * Plugin URI:        https://example.com/top-visited-posts
  * Description:       Display a configurable section of top visited posts by category with smooth scroll-to-post navigation.
- * Version:           0.1.1
+ * Version:           0.2.0
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            Mahallawy
@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Plugin constants.
  */
-define( 'TVP_VERSION', '0.1.1' );
+define( 'TVP_VERSION', '0.2.0' );
 define( 'TVP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'TVP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'TVP_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
@@ -65,15 +65,17 @@ add_action( 'plugins_loaded', 'tvp_init' );
  */
 function tvp_activate() {
 	$defaults = array(
-		'category'      => 0,
-		'page_id'       => 0,
-		'num_posts'     => 5,
-		'section_title' => __( 'Top Visited Posts', 'top-visited-posts' ),
-		'layout'        => 'list',
-		'columns'       => 3,
-		'show_rank'     => 1,
-		'order_by'      => array( 'most_views' ),
-		'elements'      => array( 'thumbnail', 'title', 'excerpt', 'date', 'views' ),
+		'category'                => 0,
+		'page_id'                 => 0,
+		'num_posts'               => 5,
+		'section_title'           => __( 'Top Visited Posts', 'top-visited-posts' ),
+		'layout'                  => 'list',
+		'columns'                 => 3,
+		'show_rank'               => 1,
+		'order_by'                => array( 'most_views' ),
+		'elements'                => array( 'thumbnail', 'title', 'excerpt', 'date', 'views' ),
+		'excerpt_words'           => 20,
+		'excerpt_preserve_breaks' => 0,
 	);
 	if ( false === get_option( 'tvp_settings' ) ) {
 		add_option( 'tvp_settings', $defaults );
