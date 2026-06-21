@@ -65,15 +65,17 @@ add_action( 'plugins_loaded', 'tvp_init' );
  */
 function tvp_activate() {
 	$defaults = array(
-		'category'      => 0,
-		'page_id'       => 0,
-		'num_posts'     => 5,
-		'section_title' => __( 'Top Visited Posts', 'top-visited-posts' ),
-		'layout'        => 'list',
-		'columns'       => 3,
-		'show_rank'     => 1,
-		'order_by'      => array( 'most_views' ),
-		'elements'      => array( 'thumbnail', 'title', 'excerpt', 'date', 'views' ),
+		'category'                => 0,
+		'page_id'                 => 0,
+		'num_posts'               => 5,
+		'section_title'           => __( 'Top Visited Posts', 'top-visited-posts' ),
+		'layout'                  => 'list',
+		'columns'                 => 3,
+		'show_rank'               => 1,
+		'order_by'                => array( 'most_views' ),
+		'elements'                => array( 'thumbnail', 'title', 'excerpt', 'date', 'views' ),
+		'excerpt_words'           => 20,
+		'excerpt_preserve_breaks' => 0,
 	);
 	if ( false === get_option( 'tvp_settings' ) ) {
 		add_option( 'tvp_settings', $defaults );
