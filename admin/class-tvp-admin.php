@@ -199,6 +199,22 @@ class TVP_Admin {
 		);
 
 		add_settings_field(
+			'tvp_excerpt_words',
+			__( 'Excerpt Length (words)', 'top-visited-posts' ),
+			array( $this, 'render_excerpt_words_field' ),
+			'top-visited-posts',
+			'tvp_display_section'
+		);
+
+		add_settings_field(
+			'tvp_excerpt_preserve_breaks',
+			__( 'Preserve Line Breaks', 'top-visited-posts' ),
+			array( $this, 'render_excerpt_preserve_breaks_field' ),
+			'top-visited-posts',
+			'tvp_display_section'
+		);
+
+		add_settings_field(
 			'tvp_layout',
 			__( 'Layout', 'top-visited-posts' ),
 			array( $this, 'render_layout_field' ),
@@ -509,6 +525,45 @@ class TVP_Admin {
 			esc_attr( self::OPTION_KEY ),
 			esc_attr( $key ),
 			$checked ? '' : 'disabled'
+		);
+	}
+
+	/**
+	 * Excerpt word-count field.
+	 *
+	 * Disabled in the UI when the excerpt element is not selected (handled
+	 * by admin.js). Only meaningful when the Excerpt element is enabled.
+	 */
+	public function render_excerpt_words_field() {
+		$options = get_option( self::OPTION_KEY );
+		$words   = isset( $options['excerpt_words'] ) ? absint( $options['excerpt_words'] ) : 20;
+
+		printf(
+			'<input type="number" id="tvp_excerpt_words" class="tvp-excerpt-dependent" min="1" max="100" step="1" name="%s[excerpt_words]" value="%d" />',
+			esc_attr( self::OPTION_KEY ),
+			(int) $words
+		);
+		echo '<p class="description">' . esc_html__( 'Number of words shown in the excerpt (1–100). Only applies when the Excerpt element is enabled.', 'top-visited-posts' ) . '</p>';
+	}
+
+	/**
+	 * Excerpt preserve-line-breaks checkbox.
+	 *
+	 * A hidden companion input always submits a 0 so the box can be turned
+	 * off explicitly when the excerpt element is enabled. When the excerpt
+	 * element is off, admin.js disables both inputs and the sanitizer keeps
+	 * the previously saved value.
+	 */
+	public function render_excerpt_preserve_breaks_field() {
+		$options  = get_option( self::OPTION_KEY );
+		$preserve = isset( $options['excerpt_preserve_breaks'] ) ? (int) $options['excerpt_preserve_breaks'] : 0;
+
+		printf(
+			'<input type="hidden" class="tvp-excerpt-dependent-hidden" name="%1$s[excerpt_preserve_breaks]" value="0" />' .
+			'<label><input type="checkbox" id="tvp_excerpt_preserve_breaks" class="tvp-excerpt-dependent" name="%1$s[excerpt_preserve_breaks]" value="1" %2$s /> %3$s</label>',
+			esc_attr( self::OPTION_KEY ),
+			checked( $preserve, 1, false ),
+			esc_html__( 'Keep line breaks and blank lines from the post excerpt', 'top-visited-posts' )
 		);
 	}
 
