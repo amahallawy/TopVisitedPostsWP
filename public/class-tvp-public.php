@@ -211,6 +211,15 @@ class TVP_Public {
 		$order_by      = isset( $options['order_by'] ) ? $options['order_by'] : array( 'most_views' );
 		$elements      = isset( $options['elements'] ) ? $options['elements'] : array( 'thumbnail', 'title', 'excerpt', 'date', 'views' );
 
+		$excerpt_words    = isset( $options['excerpt_words'] ) ? absint( $options['excerpt_words'] ) : 20;
+		$excerpt_preserve = isset( $options['excerpt_preserve_breaks'] ) ? (int) $options['excerpt_preserve_breaks'] : 0;
+		if ( $excerpt_words < 1 ) {
+			$excerpt_words = 1;
+		}
+		if ( $excerpt_words > 100 ) {
+			$excerpt_words = 100;
+		}
+
 		// Migrate legacy single-string order_by.
 		if ( is_string( $order_by ) ) {
 			$order_by = array( $order_by );
@@ -341,9 +350,16 @@ class TVP_Public {
 										break;
 
 									case 'excerpt':
-										?>
-										<span class="tvp-post-excerpt"><?php echo esc_html( wp_trim_words( get_the_excerpt(), 12, '…' ) ); ?></span>
-										<?php
+										if ( $excerpt_preserve ) {
+											$excerpt_text = self::trim_words_keep_breaks( get_the_excerpt(), $excerpt_words, '…' );
+											?>
+											<span class="tvp-post-excerpt tvp-post-excerpt--preserve-breaks"><?php echo nl2br( esc_html( $excerpt_text ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- esc_html runs before nl2br, which only injects <br /> tags. ?></span>
+											<?php
+										} else {
+											?>
+											<span class="tvp-post-excerpt"><?php echo esc_html( wp_trim_words( get_the_excerpt(), $excerpt_words, '…' ) ); ?></span>
+											<?php
+										}
 										break;
 
 									case 'date':
@@ -384,5 +400,58 @@ class TVP_Public {
 		<?php
 		wp_reset_postdata();
 		return ob_get_clean();
+	}
+
+	/**
+	 * Trim text to a word count while preserving line breaks.
+	 *
+	 * Unlike wp_trim_words(), which collapses all whitespace (including
+	 * newlines) to single spaces, this keeps `\n` characters so the
+	 * excerpt can be rendered with line breaks intact.
+	 *
+	 * @param string $text      Source text (may contain HTML/newlines).
+	 * @param int    $num_words Maximum number of words to keep.
+	 * @param string $more      Appended when the text is truncated.
+	 * @return string Trimmed plain text with newlines preserved.
+	 */
+	public static function trim_words_keep_breaks( $text, $num_words, $more = '…' ) {
+		$text      = wp_strip_all_tags( $text );
+		$num_words = (int) $num_words;
+
+		// Normalise CRLF/CR to LF; collapse spaces/tabs but keep newlines.
+		$text = str_replace( array( "\r\n", "\r" ), "\n", $text );
+		$text = preg_replace( '/[ \t]+/', ' ', $text );
+
+		// Split into tokens, treating runs of spaces and newlines as
+		// separators but keeping newline tokens so they can be re-emitted.
+		$tokens = preg_split( '/( |\n)/', trim( $text ), -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE );
+		if ( empty( $tokens ) ) {
+			return '';
+		}
+
+		$out       = '';
+		$word_seen = 0;
+		$truncated = false;
+
+		foreach ( $tokens as $token ) {
+			if ( "\n" === $token || ' ' === $token ) {
+				$out .= $token;
+				continue;
+			}
+			if ( $word_seen >= $num_words ) {
+				$truncated = true;
+				break;
+			}
+			$out .= $token;
+			++$word_seen;
+		}
+
+		$out = rtrim( $out );
+
+		if ( $truncated ) {
+			$out .= $more;
+		}
+
+		return $out;
 	}
 }
