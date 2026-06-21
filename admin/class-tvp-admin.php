@@ -300,6 +300,35 @@ class TVP_Admin {
 			$sanitized['elements'] = array( 'title' );
 		}
 
+		// Excerpt sub-settings. Because the fields are disabled in the UI
+		// when the excerpt element is off (and disabled inputs are not
+		// submitted), fall back to the previously saved value rather than
+		// the hardcoded default so disabling never wipes the config.
+		$existing = get_option( self::OPTION_KEY );
+
+		if ( isset( $input['excerpt_words'] ) ) {
+			$words = absint( $input['excerpt_words'] );
+		} elseif ( is_array( $existing ) && isset( $existing['excerpt_words'] ) ) {
+			$words = absint( $existing['excerpt_words'] );
+		} else {
+			$words = 20;
+		}
+		if ( $words < 1 ) {
+			$words = 1;
+		}
+		if ( $words > 100 ) {
+			$words = 100;
+		}
+		$sanitized['excerpt_words'] = $words;
+
+		if ( isset( $input['excerpt_preserve_breaks'] ) ) {
+			$sanitized['excerpt_preserve_breaks'] = empty( $input['excerpt_preserve_breaks'] ) ? 0 : 1;
+		} elseif ( is_array( $existing ) && isset( $existing['excerpt_preserve_breaks'] ) ) {
+			$sanitized['excerpt_preserve_breaks'] = (int) $existing['excerpt_preserve_breaks'] ? 1 : 0;
+		} else {
+			$sanitized['excerpt_preserve_breaks'] = 0;
+		}
+
 		return $sanitized;
 	}
 
