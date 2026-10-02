@@ -44,6 +44,9 @@ jobs:
             -x 'top-visited-posts/node_modules/*' \
             -x 'top-visited-posts/vendor/*' \
             -x 'top-visited-posts/tests/*' \
+            -x 'top-visited-posts/docs/*' \
+            -x 'top-visited-posts/.company/*' \
+            -x 'top-visited-posts/CLAUDE.md' \
             -x 'top-visited-posts/phpunit.xml.dist' \
             -x 'top-visited-posts/.wp-env.json' \
             -x 'top-visited-posts/composer.json' \

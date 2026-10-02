@@ -2,7 +2,7 @@
 Contributors: mahallawy
 Tags: popular posts, top posts, most viewed, analytics, scroll
 Requires at least: 5.8
-Tested up to: 6.7
+Tested up to: 7.1
 Requires PHP: 7.4
 Stable tag: 0.2.0
 License: GPL-2.0-or-later
@@ -50,6 +50,9 @@ You're taken to the configured target page, and the browser smoothly scrolls to 
 == Changelog ==
 
 = Unreleased =
+* Point the Plugin URI and Author URI at the GitHub project instead of placeholder example.com links.
+* Mark as tested up to WordPress 7.1.
+* Add the GPL-2.0 license text as `LICENSE`, and leave developer-only files (`docs/`, `CLAUDE.md`, `.company/`) out of the release zip.
 * The plugin is now translatable outside WordPress.org. It ships `languages/top-visited-posts.pot` and loads translations from its `languages/` folder. Regenerate the template with `npm run i18n:pot`.
 * Fix: views are now counted on pages served from a page cache. Before, the tracking request failed once the cached page outlived its security token.
 * Fix: the view rate limit no longer adds a database row for every visitor and post. It uses the object cache when available, otherwise one short-lived record per post, and stores visitors as salted hashes instead of IP hashes.

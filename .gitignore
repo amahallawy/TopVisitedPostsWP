@@ -14,6 +14,9 @@ package-lock.json
 # Per-developer wp-env overrides
 .wp-env.override.json
 
+# Local release builds
+build/
+
 # OS / editor
 .DS_Store
 Thumbs.db
