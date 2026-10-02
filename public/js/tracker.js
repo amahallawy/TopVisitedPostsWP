@@ -25,17 +25,25 @@
 	var data = new FormData();
 	data.append( 'action', 'tvp_track_view' );
 	data.append( 'post_id', tvpTracker.postId );
-	data.append( 'nonce', tvpTracker.nonce );
 
 	fetch( tvpTracker.ajaxUrl, {
 		method: 'POST',
 		credentials: 'same-origin',
 		body: data,
-	}).then( function () {
+	}).then( function ( response ) {
+		return response.ok ? response.json() : null;
+	}).then( function ( result ) {
+		// Only remember the view once the server accepted it, so a failed
+		// request is retried on the next page load in this session.
+		if ( ! result || ! result.success ) {
+			return;
+		}
 		try {
 			sessionStorage.setItem( storageKey, '1' );
 		} catch ( e ) {
 			// Silently fail if storage is unavailable.
 		}
+	}).catch( function () {
+		// Network error or non-JSON reply: leave the view unrecorded so it is retried.
 	});
 })();

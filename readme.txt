@@ -51,7 +51,12 @@ You're taken to the configured target page, and the browser smoothly scrolls to 
 
 = Unreleased =
 * The plugin is now translatable outside WordPress.org. It ships `languages/top-visited-posts.pot` and loads translations from its `languages/` folder. Regenerate the template with `npm run i18n:pot`.
+* Fix: views are now counted on pages served from a page cache. Before, the tracking request failed once the cached page outlived its security token.
+* Fix: the view rate limit no longer adds a database row for every visitor and post. It uses the object cache when available, otherwise one short-lived record per post, and stores visitors as salted hashes instead of IP hashes.
+* Fix: the top posts section now ranks every post in the category. Before, it only considered the 100 newest, so older popular posts never appeared. The ranking is cached for 5 minutes (filter `tvp_ranking_cache_ttl`) and refreshes when settings or posts change.
+* Dev: add PHPStan static analysis (level 6, WordPress stubs) via `composer stan` and CI; fix the type mismatches it found in the settings fields and rank badge.
 * Dev: add a PHPUnit integration test suite for the tracker, settings and shortcode, run with `npm run test:php` and in CI.
+* Remove the never-released 1.0.0 entry from the changelog so versions read newest-first.
 
 = 0.2.0 =
 * Add configurable excerpt word count (default 20, replacing the previous fixed 12-word trim).
@@ -60,6 +65,3 @@ You're taken to the configured target page, and the browser smoothly scrolls to 
 
 = 0.1.1 =
 * Fix: scroll-to-post now works on target pages whose post cards have no permalink link (e.g. some Spectra Loop Builder templates) by matching cards on a normalised, diacritic-insensitive post title.
-
-= 1.0.0 =
-* Initial release.

@@ -39,6 +39,8 @@ require_once TVP_PLUGIN_DIR . 'public/class-tvp-public.php';
 
 /**
  * Initialize the plugin on plugins_loaded.
+ *
+ * @return void
  */
 function tvp_init() {
 	// Admin settings and menu.
@@ -76,6 +78,8 @@ add_action( 'init', 'tvp_load_textdomain' );
 
 /**
  * Activation hook — set default options.
+ *
+ * @return void
  */
 function tvp_activate() {
 	$defaults = array(
@@ -100,8 +104,8 @@ register_activation_hook( __FILE__, 'tvp_activate' );
 /**
  * Add Settings link on the Plugins page.
  *
- * @param array $links Existing plugin action links.
- * @return array Modified plugin action links.
+ * @param string[] $links Existing plugin action links.
+ * @return string[] Modified plugin action links.
  */
 function tvp_plugin_action_links( $links ) {
 	$settings_link = sprintf(

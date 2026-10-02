@@ -25,7 +25,7 @@ class TVP_Admin {
 	/**
 	 * All available post elements with labels.
 	 *
-	 * @return array
+	 * @return array<string, string> Element key => label.
 	 */
 	public static function get_available_elements() {
 		return array(
@@ -43,7 +43,7 @@ class TVP_Admin {
 	 * Each criterion is a single sort dimension. Multiple criteria can be
 	 * stacked via drag-to-reorder to create multi-layer sorting.
 	 *
-	 * @return array
+	 * @return array<string, string> Criterion key => label.
 	 */
 	public static function get_order_criteria() {
 		return array(
@@ -57,6 +57,8 @@ class TVP_Admin {
 
 	/**
 	 * Register hooks.
+	 *
+	 * @return void
 	 */
 	public function init() {
 		add_action( 'admin_menu', array( $this, 'add_menu_page' ) );
@@ -68,6 +70,7 @@ class TVP_Admin {
 	 * Enqueue admin styles and scripts on our settings page only.
 	 *
 	 * @param string $hook_suffix The current admin page hook.
+	 * @return void
 	 */
 	public function enqueue_admin_assets( $hook_suffix ) {
 		if ( 'toplevel_page_top-visited-posts' !== $hook_suffix ) {
@@ -90,6 +93,8 @@ class TVP_Admin {
 
 	/**
 	 * Add the top-level admin menu item and rename its first submenu to "Settings".
+	 *
+	 * @return void
 	 */
 	public function add_menu_page() {
 		add_menu_page(
@@ -115,6 +120,8 @@ class TVP_Admin {
 
 	/**
 	 * Register settings, sections, and fields using the Settings API.
+	 *
+	 * @return void
 	 */
 	public function register_settings() {
 		register_setting(
@@ -234,8 +241,8 @@ class TVP_Admin {
 	/**
 	 * Sanitize settings before saving.
 	 *
-	 * @param array $input Raw form values.
-	 * @return array Sanitized values.
+	 * @param array<string, mixed> $input Raw form values.
+	 * @return array<string, mixed> Sanitized values.
 	 */
 	public function sanitize_settings( $input ) {
 		$sanitized = array();
@@ -334,6 +341,8 @@ class TVP_Admin {
 
 	/**
 	 * Content section description callback.
+	 *
+	 * @return void
 	 */
 	public function render_content_section_description() {
 		echo '<p>' . esc_html__( 'Configure which posts appear and how they are ordered.', 'top-visited-posts' ) . '</p>';
@@ -341,6 +350,8 @@ class TVP_Admin {
 
 	/**
 	 * Display section description callback.
+	 *
+	 * @return void
 	 */
 	public function render_display_section_description() {
 		echo '<p>' . esc_html__( 'Configure the appearance and visible elements of each post item.', 'top-visited-posts' ) . '</p>';
@@ -348,6 +359,8 @@ class TVP_Admin {
 
 	/**
 	 * Category dropdown field.
+	 *
+	 * @return void
 	 */
 	public function render_category_field() {
 		$options  = get_option( self::OPTION_KEY );
@@ -359,7 +372,7 @@ class TVP_Admin {
 				'id'                => 'tvp_category',
 				'selected'          => $selected,
 				'show_option_none'  => __( '— Select Category —', 'top-visited-posts' ),
-				'option_none_value' => 0,
+				'option_none_value' => '0',
 				'hide_empty'        => false,
 				'class'             => 'tvp-select',
 			)
@@ -369,6 +382,8 @@ class TVP_Admin {
 
 	/**
 	 * Page dropdown field.
+	 *
+	 * @return void
 	 */
 	public function render_page_field() {
 		$options  = get_option( self::OPTION_KEY );
@@ -381,7 +396,7 @@ class TVP_Admin {
 				'id'                => 'tvp_page_id',
 				'selected'          => $selected,
 				'show_option_none'  => __( '— Select Page —', 'top-visited-posts' ),
-				'option_none_value' => 0,
+				'option_none_value' => '0',
 				'class'             => 'tvp-select',
 			)
 		);
@@ -391,6 +406,8 @@ class TVP_Admin {
 
 	/**
 	 * Number of posts field.
+	 *
+	 * @return void
 	 */
 	public function render_num_posts_field() {
 		$options   = get_option( self::OPTION_KEY );
@@ -399,13 +416,15 @@ class TVP_Admin {
 		printf(
 			'<input type="number" id="tvp_num_posts" name="%s[num_posts]" value="%d" min="1" max="50" class="small-text" />',
 			esc_attr( self::OPTION_KEY ),
-			esc_attr( $num_posts )
+			(int) $num_posts
 		);
 		echo '<p class="description">' . esc_html__( 'How many top visited posts to display (1–50).', 'top-visited-posts' ) . '</p>';
 	}
 
 	/**
 	 * Order by field — draggable multi-layer priority list.
+	 *
+	 * @return void
 	 */
 	public function render_order_by_field() {
 		$options   = get_option( self::OPTION_KEY );
@@ -447,6 +466,7 @@ class TVP_Admin {
 	 * @param string $key     Criterion key.
 	 * @param string $label   Criterion label.
 	 * @param bool   $checked Whether criterion is enabled.
+	 * @return void
 	 */
 	private function render_order_item( $key, $label, $checked ) {
 		printf(
@@ -469,6 +489,8 @@ class TVP_Admin {
 
 	/**
 	 * Section title field.
+	 *
+	 * @return void
 	 */
 	public function render_section_title_field() {
 		$options       = get_option( self::OPTION_KEY );
@@ -484,6 +506,8 @@ class TVP_Admin {
 
 	/**
 	 * Show rank numbers checkbox.
+	 *
+	 * @return void
 	 */
 	public function render_show_rank_field() {
 		$options   = get_option( self::OPTION_KEY );
@@ -499,6 +523,8 @@ class TVP_Admin {
 
 	/**
 	 * Post elements — drag to reorder, toggle to enable/disable.
+	 *
+	 * @return void
 	 */
 	public function render_elements_field() {
 		$options   = get_option( self::OPTION_KEY );
@@ -537,6 +563,7 @@ class TVP_Admin {
 	 * @param string $key     Element key.
 	 * @param string $label   Element label.
 	 * @param bool   $checked Whether element is enabled.
+	 * @return void
 	 */
 	private function render_element_item( $key, $label, $checked ) {
 		printf(
@@ -562,6 +589,8 @@ class TVP_Admin {
 	 *
 	 * Disabled in the UI when the excerpt element is not selected (handled
 	 * by admin.js). Only meaningful when the Excerpt element is enabled.
+	 *
+	 * @return void
 	 */
 	public function render_excerpt_words_field() {
 		$options = get_option( self::OPTION_KEY );
@@ -582,6 +611,8 @@ class TVP_Admin {
 	 * off explicitly when the excerpt element is enabled. When the excerpt
 	 * element is off, admin.js disables both inputs and the sanitizer keeps
 	 * the previously saved value.
+	 *
+	 * @return void
 	 */
 	public function render_excerpt_preserve_breaks_field() {
 		$options  = get_option( self::OPTION_KEY );
@@ -598,6 +629,8 @@ class TVP_Admin {
 
 	/**
 	 * Layout selector field.
+	 *
+	 * @return void
 	 */
 	public function render_layout_field() {
 		$options = get_option( self::OPTION_KEY );
@@ -623,6 +656,8 @@ class TVP_Admin {
 
 	/**
 	 * Grid columns field.
+	 *
+	 * @return void
 	 */
 	public function render_columns_field() {
 		$options = get_option( self::OPTION_KEY );
@@ -647,6 +682,8 @@ class TVP_Admin {
 
 	/**
 	 * Render the settings page.
+	 *
+	 * @return void
 	 */
 	public function render_settings_page() {
 		// Capability check.
