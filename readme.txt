@@ -50,6 +50,7 @@ You're taken to the configured target page, and the browser smoothly scrolls to 
 == Changelog ==
 
 = Unreleased =
+* The plugin is now translatable outside WordPress.org. It ships `languages/top-visited-posts.pot` and loads translations from its `languages/` folder. Regenerate the template with `npm run i18n:pot`.
 * Fix: views are now counted on pages served from a page cache. Before, the tracking request failed once the cached page outlived its security token.
 * Fix: the view rate limit no longer adds a database row for every visitor and post. It uses the object cache when available, otherwise one short-lived record per post, and stores visitors as salted hashes instead of IP hashes.
 * Fix: the top posts section now ranks every post in the category. Before, it only considered the 100 newest, so older popular posts never appeared. The ranking is cached for 5 minutes (filter `tvp_ranking_cache_ttl`) and refreshes when settings or posts change.
