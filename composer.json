@@ -26,6 +26,9 @@
         "test": "phpunit"
     },
     "config": {
+        "platform": {
+            "php": "7.4.0"
+        },
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
         }
