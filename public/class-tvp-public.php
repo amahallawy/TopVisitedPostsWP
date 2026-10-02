@@ -31,6 +31,8 @@ class TVP_Public {
 
 	/**
 	 * Register hooks.
+	 *
+	 * @return void
 	 */
 	public function init() {
 		add_shortcode( 'top_visited_posts', array( $this, 'render_shortcode' ) );
@@ -266,6 +268,8 @@ class TVP_Public {
 
 	/**
 	 * Enqueue frontend styles and scroll script.
+	 *
+	 * @return void
 	 */
 	public function enqueue_assets() {
 		wp_enqueue_style(
@@ -359,7 +363,7 @@ class TVP_Public {
 	/**
 	 * Shortcode handler.
 	 *
-	 * @param array $atts Shortcode attributes (unused, settings come from DB).
+	 * @param array<string, string>|string $atts Shortcode attributes (unused, settings come from DB).
 	 * @return string HTML output.
 	 */
 	public function render_shortcode( $atts ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Required by add_shortcode signature.
@@ -408,9 +412,9 @@ class TVP_Public {
 	/**
 	 * Sort posts by multiple criteria in priority order.
 	 *
-	 * @param array $posts    Array of WP_Post objects.
-	 * @param array $criteria Ordered list of criterion keys.
-	 * @return array Sorted posts.
+	 * @param WP_Post[] $posts    Posts to sort.
+	 * @param string[]  $criteria Ordered list of criterion keys.
+	 * @return WP_Post[] Sorted posts.
 	 */
 	private function multi_sort( $posts, $criteria ) {
 		usort(
@@ -527,7 +531,7 @@ class TVP_Public {
 					<li class="<?php echo esc_attr( $item_classes ); ?>">
 						<a href="<?php echo esc_url( $link ); ?>" class="tvp-post-link" data-tvp-target="<?php echo esc_attr( $anchor_id ); ?>">
 							<?php if ( $show_rank ) : ?>
-								<span class="tvp-rank-badge"><?php echo esc_html( $rank ); ?></span>
+								<span class="tvp-rank-badge"><?php echo esc_html( (string) $rank ); ?></span>
 							<?php endif; ?>
 							<?php
 							// Render elements in the configured order.
