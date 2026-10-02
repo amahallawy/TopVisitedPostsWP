@@ -17,6 +17,8 @@ class TVP_Docs {
 
 	/**
 	 * Register hooks.
+	 *
+	 * @return void
 	 */
 	public function init() {
 		add_action( 'admin_menu', array( $this, 'add_submenu_page' ) );
@@ -25,6 +27,8 @@ class TVP_Docs {
 
 	/**
 	 * Add the documentation submenu page under Top Visited Posts.
+	 *
+	 * @return void
 	 */
 	public function add_submenu_page() {
 		add_submenu_page(
@@ -41,6 +45,7 @@ class TVP_Docs {
 	 * Enqueue admin styles on our docs page.
 	 *
 	 * @param string $hook_suffix The current admin page hook.
+	 * @return void
 	 */
 	public function enqueue_styles( $hook_suffix ) {
 		if ( 'top-visited-posts_page_tvp-css-docs' !== $hook_suffix ) {
@@ -56,6 +61,8 @@ class TVP_Docs {
 
 	/**
 	 * Render the CSS documentation page.
+	 *
+	 * @return void
 	 */
 	public function render_docs_page() {
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -250,10 +257,11 @@ class TVP_Docs {
 	/**
 	 * Render a documentation section with a table of selectors.
 	 *
-	 * @param string $title       Section title.
-	 * @param string $description Section description.
-	 * @param array  $rows        Array of rows: [ selector, description ] or [ variable, default, description ].
-	 * @param bool   $is_vars     Whether this is a CSS variables table (3-column).
+	 * @param string                         $title       Section title.
+	 * @param string                         $description Section description.
+	 * @param array<int, array<int, string>> $rows        Array of rows: [ selector, description ] or [ variable, default, description ].
+	 * @param bool                           $is_vars     Whether this is a CSS variables table (3-column).
+	 * @return void
 	 */
 	private function render_section( $title, $description, $rows, $is_vars = false ) {
 		?>
