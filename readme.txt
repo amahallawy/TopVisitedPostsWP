@@ -50,6 +50,7 @@ You're taken to the configured target page, and the browser smoothly scrolls to 
 == Changelog ==
 
 = Unreleased =
+* Fix: the top posts section now ranks every post in the category. Before, it only considered the 100 newest, so older popular posts never appeared. The ranking is cached for 5 minutes (filter `tvp_ranking_cache_ttl`) and refreshes when settings or posts change.
 * Dev: add PHPStan static analysis (level 6, WordPress stubs) via `composer stan` and CI; fix the type mismatches it found in the settings fields and rank badge.
 * Dev: add a PHPUnit integration test suite for the tracker, settings and shortcode, run with `npm run test:php` and in CI.
 * Remove the never-released 1.0.0 entry from the changelog so versions read newest-first.
