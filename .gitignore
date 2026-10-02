@@ -6,9 +6,13 @@ node_modules/
 composer.lock
 package-lock.json
 
-# Linter caches
+# Linter / test caches
 .phpcs-cache
 .eslintcache
+.phpunit.result.cache
+
+# Per-developer wp-env overrides
+.wp-env.override.json
 
 # OS / editor
 .DS_Store

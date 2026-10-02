@@ -50,6 +50,7 @@ You're taken to the configured target page, and the browser smoothly scrolls to 
 == Changelog ==
 
 = Unreleased =
+* Dev: add a PHPUnit integration test suite for the tracker, settings and shortcode, run with `npm run test:php` and in CI.
 * Remove the never-released 1.0.0 entry from the changelog so versions read newest-first.
 
 = 0.2.0 =
