@@ -53,9 +53,9 @@ class Test_TVP_Public extends WP_UnitTestCase {
 	/**
 	 * Create a post in the test category with a view count.
 	 *
-	 * @param string $title Post title.
-	 * @param int    $views View count.
-	 * @param string $date  Post date (Y-m-d H:i:s).
+	 * @param string   $title Post title.
+	 * @param int|null $views View count, or null for a post never tracked.
+	 * @param string   $date  Post date (Y-m-d H:i:s).
 	 * @return int Post ID.
 	 */
 	private function make_post( $title, $views, $date = '2026-01-01 10:00:00' ) {
@@ -66,8 +66,22 @@ class Test_TVP_Public extends WP_UnitTestCase {
 				'post_category' => array( $this->category_id ),
 			)
 		);
-		update_post_meta( $post_id, TVP_Tracker::META_KEY, $views );
+		if ( null !== $views ) {
+			update_post_meta( $post_id, TVP_Tracker::META_KEY, $views );
+		}
 		return $post_id;
+	}
+
+	/**
+	 * Create many recent posts in the test category, all with one view.
+	 *
+	 * @param int $count Number of posts.
+	 * @return void
+	 */
+	private function make_recent_posts( $count ) {
+		for ( $i = 0; $i < $count; $i++ ) {
+			$this->make_post( 'Recent ' . $i, 1, '2026-03-01 10:00:00' );
+		}
 	}
 
 	/**
@@ -117,6 +131,111 @@ class Test_TVP_Public extends WP_UnitTestCase {
 		update_post_meta( $outside, TVP_Tracker::META_KEY, 999 );
 
 		$this->assertSame( array( 'Inside' ), $this->rendered_titles() );
+	}
+
+	public function test_old_popular_post_beyond_the_newest_100_is_ranked() {
+		$this->make_post( 'Old favourite', 500, '2020-01-01 10:00:00' );
+		$this->make_recent_posts( 100 );
+		$this->save_settings( array( 'num_posts' => 1 ) );
+
+		$this->assertSame( array( 'Old favourite' ), $this->rendered_titles() );
+	}
+
+	public function test_posts_without_views_still_appear_after_viewed_posts() {
+		$this->make_post( 'Never viewed', null, '2026-05-01 10:00:00' );
+		$this->make_post( 'Viewed', 3, '2026-01-01 10:00:00' );
+
+		$this->assertSame( array( 'Viewed', 'Never viewed' ), $this->rendered_titles() );
+	}
+
+	public function test_least_views_puts_never_viewed_posts_first() {
+		$this->make_post( 'Viewed', 3 );
+		$this->make_post( 'Never viewed', null );
+		$this->save_settings( array( 'order_by' => array( 'least_views' ) ) );
+
+		$this->assertSame( array( 'Never viewed', 'Viewed' ), $this->rendered_titles() );
+	}
+
+	public function test_old_sticky_post_comes_first_when_sticky_criterion_leads() {
+		$sticky = $this->make_post( 'Old sticky', 0, '2020-01-01 10:00:00' );
+		stick_post( $sticky );
+		$this->make_recent_posts( 100 );
+		$this->save_settings(
+			array(
+				'num_posts' => 2,
+				'order_by'  => array( 'featured', 'most_views' ),
+			)
+		);
+
+		$titles = $this->rendered_titles();
+
+		$this->assertSame( 'Old sticky', $titles[0] );
+		$this->assertCount( 2, $titles );
+	}
+
+	public function test_oldest_criterion_reaches_posts_beyond_the_newest_100() {
+		$this->make_post( 'First ever', 1, '2019-01-01 10:00:00' );
+		$this->make_recent_posts( 100 );
+		$this->save_settings(
+			array(
+				'num_posts' => 1,
+				'order_by'  => array( 'oldest' ),
+			)
+		);
+
+		$this->assertSame( array( 'First ever' ), $this->rendered_titles() );
+	}
+
+	public function test_ranking_is_cached_between_renders() {
+		$this->make_post( 'A', 10 );
+		$b = $this->make_post( 'B', 5 );
+		$this->assertSame( array( 'A', 'B' ), $this->rendered_titles() );
+
+		update_post_meta( $b, TVP_Tracker::META_KEY, 50 );
+
+		$this->assertSame( array( 'A', 'B' ), $this->rendered_titles() );
+	}
+
+	public function test_saving_settings_clears_the_ranking_cache() {
+		$this->make_post( 'A', 10 );
+		$b = $this->make_post( 'B', 5 );
+		$this->rendered_titles();
+		update_post_meta( $b, TVP_Tracker::META_KEY, 50 );
+
+		$this->save_settings( array( 'section_title' => 'Popular' ) );
+
+		$this->assertSame( array( 'B', 'A' ), $this->rendered_titles() );
+	}
+
+	public function test_publishing_a_post_clears_the_ranking_cache() {
+		$this->make_post( 'A', 10 );
+		$this->rendered_titles();
+
+		$this->make_post( 'Newcomer', 99 );
+
+		$this->assertSame( array( 'Newcomer', 'A' ), $this->rendered_titles() );
+	}
+
+	public function test_scroll_map_on_target_page_covers_ranked_posts() {
+		$old     = $this->make_post( 'Old favourite', 500, '2020-01-01 10:00:00' );
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		$this->make_recent_posts( 100 );
+		$this->save_settings(
+			array(
+				'num_posts' => 3,
+				'page_id'   => $page_id,
+			)
+		);
+		$this->go_to( get_permalink( $page_id ) );
+		$GLOBALS['wp_scripts'] = null; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- fresh script registry for this test.
+
+		( new TVP_Public() )->enqueue_assets();
+		preg_match( '/var tvpScroll = (.*);/s', (string) wp_scripts()->get_data( 'tvp-scroll', 'data' ), $matches );
+		$localized = json_decode( $matches[1], true );
+
+		$this->assertCount( 3, $localized['postMap'] );
+		$this->assertContains( (string) $old, array_map( 'strval', $localized['postMap'] ) );
+		$this->assertContains( (string) $old, array_map( 'strval', $localized['titleMap'] ) );
 	}
 
 	public function test_normalise_title_strips_arabic_diacritics() {
