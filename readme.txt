@@ -50,6 +50,7 @@ You're taken to the configured target page, and the browser smoothly scrolls to 
 == Changelog ==
 
 = Unreleased =
+* The plugin is now translatable outside WordPress.org. It ships `languages/top-visited-posts.pot` and loads translations from its `languages/` folder. Regenerate the template with `npm run i18n:pot`.
 * Dev: add a PHPUnit integration test suite for the tracker, settings and shortcode, run with `npm run test:php` and in CI.
 
 = 0.2.0 =

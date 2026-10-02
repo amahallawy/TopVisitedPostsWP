@@ -9,7 +9,8 @@
         "lint:js": "eslint \"**/*.js\" --ignore-pattern node_modules --ignore-pattern vendor",
         "wp-env": "wp-env",
         "test:php": "wp-env run tests-cli --env-cwd=wp-content/plugins/top-visited-posts composer test",
-        "test:php:install": "wp-env run tests-cli --env-cwd=wp-content/plugins/top-visited-posts composer install --no-interaction"
+        "test:php:install": "wp-env run tests-cli --env-cwd=wp-content/plugins/top-visited-posts composer install --no-interaction",
+        "i18n:pot": "wp-env run cli --env-cwd=wp-content/plugins/top-visited-posts wp i18n make-pot . languages/top-visited-posts.pot --exclude=vendor,node_modules,tests,docs,build"
     },
     "devDependencies": {
         "@wordpress/env": "^11.16.0",
