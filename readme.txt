@@ -51,6 +51,7 @@ You're taken to the configured target page, and the browser smoothly scrolls to 
 
 = Unreleased =
 * Dev: add a PHPUnit integration test suite for the tracker, settings and shortcode, run with `npm run test:php` and in CI.
+* Remove the never-released 1.0.0 entry from the changelog so versions read newest-first.
 
 = 0.2.0 =
 * Add configurable excerpt word count (default 20, replacing the previous fixed 12-word trim).
@@ -59,6 +60,3 @@ You're taken to the configured target page, and the browser smoothly scrolls to 
 
 = 0.1.1 =
 * Fix: scroll-to-post now works on target pages whose post cards have no permalink link (e.g. some Spectra Loop Builder templates) by matching cards on a normalised, diacritic-insensitive post title.
-
-= 1.0.0 =
-* Initial release.
