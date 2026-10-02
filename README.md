@@ -65,7 +65,7 @@ Each of the following can be enabled/disabled and dragged to change the renderin
 - Keyboard focus styles on post links
 
 ### Security
-- Nonces on all AJAX requests
+- View tracking only counts published posts and allows one view per visitor per post every 30 minutes. Visitors are stored as salted hashes, never raw IPs. The tracking request deliberately carries no nonce, so pages served from a page cache keep counting (see `docs/agdr/AgDR-0005-tracking-without-nonce.md`)
 - Capability checks (`manage_options`) on settings and docs pages
 - Input sanitization on every field (allowlists for enums, `absint` for integers, `sanitize_text_field` for strings)
 - Output escaping throughout templates

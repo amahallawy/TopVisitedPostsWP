@@ -23,6 +23,20 @@ class TVP_Tracker {
 	const META_KEY = 'tvp_view_count';
 
 	/**
+	 * How long one visitor's view of a post blocks another count, in seconds.
+	 *
+	 * @var int
+	 */
+	const RATE_LIMIT_WINDOW = 1800;
+
+	/**
+	 * Most visitors remembered per post when no persistent object cache exists.
+	 *
+	 * @var int
+	 */
+	const RATE_LIMIT_MAX_VISITORS = 1000;
+
+	/**
 	 * Register hooks.
 	 */
 	public function init() {
@@ -53,29 +67,27 @@ class TVP_Tracker {
 			array(
 				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 				'postId'  => get_the_ID(),
-				'nonce'   => wp_create_nonce( 'tvp_track_view' ),
 			)
 		);
 	}
 
 	/**
 	 * AJAX handler — increment the view count for a post.
+	 *
+	 * Deliberately has no nonce check: the request is anonymous, changes
+	 * nothing but a public counter, and pages served from a page cache
+	 * outlive any nonce. See docs/agdr/AgDR-0005-tracking-without-nonce.md.
 	 */
 	public function track_view() {
-		check_ajax_referer( 'tvp_track_view', 'nonce' );
-
-		$post_id = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0;
+		$post_id = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Anonymous view counter; see docblock.
 
 		$post = get_post( $post_id );
 		if ( ! $post || 'post' !== $post->post_type || 'publish' !== $post->post_status ) {
 			wp_send_json_error( 'Invalid post.' );
 		}
 
-		// Rate limit: one count per IP + post per 30 minutes.
-		$remote_addr   = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : 'unknown';
-		$ip_hash       = md5( $remote_addr );
-		$transient_key = 'tvp_view_' . $ip_hash . '_' . $post_id;
-		if ( get_transient( $transient_key ) ) {
+		// Rate limit: one count per visitor + post per window.
+		if ( ! self::claim_view( $post_id, self::visitor_key() ) ) {
 			wp_send_json_success(
 				array(
 					'views'   => (int) get_post_meta( $post_id, self::META_KEY, true ),
@@ -83,7 +95,6 @@ class TVP_Tracker {
 				)
 			);
 		}
-		set_transient( $transient_key, 1, 30 * MINUTE_IN_SECONDS );
 
 		// Ensure meta row exists before atomic increment.
 		if ( '' === get_post_meta( $post_id, self::META_KEY, true ) ) {
@@ -111,6 +122,64 @@ class TVP_Tracker {
 				'counted' => true,
 			)
 		);
+	}
+
+	/**
+	 * A short, salted, non-reversible key for the current visitor.
+	 *
+	 * Uses wp_hash() so the stored value cannot be matched back to an IP by
+	 * hashing candidate addresses, as a plain md5() could.
+	 *
+	 * @return string
+	 */
+	private static function visitor_key() {
+		$remote_addr = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : 'unknown';
+		return 'v' . substr( wp_hash( 'tvp_view|' . $remote_addr ), 0, 16 );
+	}
+
+	/**
+	 * Record that a visitor viewed a post, unless they already did within the window.
+	 *
+	 * With a persistent object cache this is one atomic cache entry and never
+	 * touches the database. Without one, a single transient per post holds the
+	 * recent visitors, instead of one transient per visitor and post.
+	 *
+	 * @param int    $post_id Post ID.
+	 * @param string $visitor Visitor key from visitor_key().
+	 * @return bool True if this view should be counted.
+	 */
+	private static function claim_view( $post_id, $visitor ) {
+		if ( wp_using_ext_object_cache() ) {
+			return wp_cache_add( $visitor . '_' . $post_id, 1, 'tvp_views', self::RATE_LIMIT_WINDOW );
+		}
+
+		$transient_key = 'tvp_view_' . $post_id;
+		$cutoff        = time() - self::RATE_LIMIT_WINDOW;
+		$seen          = get_transient( $transient_key );
+		$seen          = is_array( $seen ) ? $seen : array();
+
+		// Forget visitors whose window has passed.
+		$seen = array_filter(
+			$seen,
+			function ( $viewed_at ) use ( $cutoff ) {
+				return (int) $viewed_at > $cutoff;
+			}
+		);
+
+		if ( isset( $seen[ $visitor ] ) ) {
+			return false;
+		}
+
+		$seen[ $visitor ] = time();
+
+		// Keep the record bounded on very busy posts by dropping the oldest visitors.
+		if ( count( $seen ) > self::RATE_LIMIT_MAX_VISITORS ) {
+			asort( $seen );
+			$seen = array_slice( $seen, -self::RATE_LIMIT_MAX_VISITORS, null, true );
+		}
+
+		set_transient( $transient_key, $seen, self::RATE_LIMIT_WINDOW );
+		return true;
 	}
 
 	/**

@@ -50,6 +50,8 @@ You're taken to the configured target page, and the browser smoothly scrolls to 
 == Changelog ==
 
 = Unreleased =
+* Fix: views are now counted on pages served from a page cache. Before, the tracking request failed once the cached page outlived its security token.
+* Fix: the view rate limit no longer adds a database row for every visitor and post. It uses the object cache when available, otherwise one short-lived record per post, and stores visitors as salted hashes instead of IP hashes.
 * Dev: add a PHPUnit integration test suite for the tracker, settings and shortcode, run with `npm run test:php` and in CI.
 
 = 0.2.0 =
