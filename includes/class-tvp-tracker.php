@@ -38,6 +38,8 @@ class TVP_Tracker {
 
 	/**
 	 * Register hooks.
+	 *
+	 * @return void
 	 */
 	public function init() {
 		add_action( 'wp_ajax_tvp_track_view', array( $this, 'track_view' ) );
@@ -47,6 +49,8 @@ class TVP_Tracker {
 
 	/**
 	 * Enqueue the tracking script on single post pages.
+	 *
+	 * @return void
 	 */
 	public function enqueue_tracker_script() {
 		if ( ! is_single() ) {
@@ -77,6 +81,8 @@ class TVP_Tracker {
 	 * Deliberately has no nonce check: the request is anonymous, changes
 	 * nothing but a public counter, and pages served from a page cache
 	 * outlive any nonce. See docs/agdr/AgDR-0005-tracking-without-nonce.md.
+	 *
+	 * @return void
 	 */
 	public function track_view() {
 		$post_id = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Anonymous view counter; see docblock.

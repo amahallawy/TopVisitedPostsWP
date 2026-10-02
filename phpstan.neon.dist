@@ -1,0 +1,18 @@
+# PHPStan config. See docs/agdr/AgDR-0003-phpstan-level-6.md.
+# WordPress stubs come from szepeviktor/phpstan-wordpress, loaded by
+# phpstan/extension-installer.
+parameters:
+	level: 6
+	paths:
+		- top-visited-posts.php
+		- uninstall.php
+		- admin
+		- includes
+		- public
+	bootstrapFiles:
+		- tests/phpstan-bootstrap.php
+	dynamicConstantNames:
+		- TVP_VERSION
+		- TVP_PLUGIN_DIR
+		- TVP_PLUGIN_URL
+		- TVP_PLUGIN_BASENAME
