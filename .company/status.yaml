@@ -1,11 +1,11 @@
 # Company status report: read by the Company dashboard and checked before every PR.
 # Keep it current (at least every 14 days). See /project-status in the Company workspace.
 schema: 1
-updated: 2026-10-02
+updated: 2026-10-03
 goal: "Ship 0.3.0: fix ranking/tracking bugs, add tests + PHP static analysis, close repo gaps"
 due: 2026-11-30
-progress: 0
-progress_note: "Audit on 2026-10-02 found 15 gaps; work starting, nothing fixed yet"
+progress: 90
+progress_note: "All audit fixes merged (#18-#25); release PR #17 open, v0.3.0 tag pending"
 health: at-risk
 blockers:
 next_release: "0.3.0"
