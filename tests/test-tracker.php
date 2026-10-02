@@ -108,10 +108,87 @@ class Test_TVP_Tracker extends WP_Ajax_UnitTestCase {
 		$this->assertSame( 0, TVP_Tracker::get_views( $draft_id ) );
 	}
 
-	public function test_invalid_nonce_is_rejected() {
-		$this->expectException( WPAjaxDieStopException::class );
+	public function test_view_from_a_cached_page_with_a_stale_nonce_is_counted() {
+		$response = $this->track( $this->post_id, 'expired-nonce-from-cached-html' );
 
-		$this->track( $this->post_id, 'not-a-nonce' );
+		$this->assertTrue( $response['success'] );
+		$this->assertSame( 1, TVP_Tracker::get_views( $this->post_id ) );
+	}
+
+	public function test_view_without_any_nonce_is_counted() {
+		$this->_last_response = '';
+		$_POST['post_id']     = (string) $this->post_id;
+		unset( $_POST['nonce'] );
+
+		try {
+			$this->_handleAjax( 'tvp_track_view' );
+		} catch ( WPAjaxDieContinueException $e ) {
+			// wp_send_json_*() ends the request by throwing this.
+			$this->assertNotSame( '', $this->_last_response );
+		}
+
+		$this->assertSame( 1, TVP_Tracker::get_views( $this->post_id ) );
+	}
+
+	public function test_many_visitors_add_at_most_one_rate_limit_record_per_post() {
+		foreach ( range( 1, 5 ) as $i ) {
+			$_SERVER['REMOTE_ADDR'] = '198.51.100.' . $i;
+			$this->track( $this->post_id );
+		}
+
+		$this->assertSame( 5, TVP_Tracker::get_views( $this->post_id ) );
+		$this->assertLessThanOrEqual( 2, $this->count_rate_limit_option_rows(), 'Expected one transient (value + timeout) for the post, not one per visitor.' );
+	}
+
+	public function test_rate_limit_still_applies_per_visitor_with_shared_record() {
+		$_SERVER['REMOTE_ADDR'] = '198.51.100.1';
+		$this->track( $this->post_id );
+		$_SERVER['REMOTE_ADDR'] = '198.51.100.2';
+		$this->track( $this->post_id );
+		$_SERVER['REMOTE_ADDR'] = '198.51.100.1';
+		$response               = $this->track( $this->post_id );
+
+		$this->assertFalse( $response['data']['counted'] );
+		$this->assertSame( 2, TVP_Tracker::get_views( $this->post_id ) );
+	}
+
+	public function test_persistent_object_cache_rate_limits_without_option_rows() {
+		$was_using = wp_using_ext_object_cache( true );
+
+		try {
+			$this->track( $this->post_id );
+			$response = $this->track( $this->post_id );
+		} finally {
+			// The previous value can be null, which would leave the flag on; cast it.
+			wp_using_ext_object_cache( (bool) $was_using );
+		}
+
+		$this->assertFalse( $response['data']['counted'] );
+		$this->assertSame( 1, TVP_Tracker::get_views( $this->post_id ) );
+		$this->assertSame( 0, $this->count_rate_limit_option_rows() );
+	}
+
+	public function test_stored_rate_limit_record_does_not_contain_raw_ip() {
+		$this->track( $this->post_id );
+
+		global $wpdb;
+		$values = $wpdb->get_col( "SELECT option_value FROM {$wpdb->options} WHERE option_name LIKE '%tvp\\_view%'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+
+		$this->assertNotEmpty( $values );
+		foreach ( $values as $value ) {
+			$this->assertStringNotContainsString( '203.0.113.10', $value );
+			$this->assertStringNotContainsString( md5( '203.0.113.10' ), $value );
+		}
+	}
+
+	/**
+	 * Count option rows written by the tracker's rate limiter.
+	 *
+	 * @return int
+	 */
+	private function count_rate_limit_option_rows() {
+		global $wpdb;
+		return (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->options} WHERE option_name LIKE '%tvp\\_view%'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 	}
 
 	public function test_untracked_post_has_zero_views() {
