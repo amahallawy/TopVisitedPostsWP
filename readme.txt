@@ -4,7 +4,7 @@ Tags: popular posts, top posts, most viewed, analytics, scroll
 Requires at least: 5.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.2.0
+Stable tag: 0.3.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -50,6 +50,8 @@ You're taken to the configured target page, and the browser smoothly scrolls to 
 == Changelog ==
 
 = Unreleased =
+
+= 0.3.0 =
 * Point the Plugin URI and Author URI at the GitHub project instead of placeholder example.com links.
 * Mark as tested up to WordPress 7.1.
 * Add the GPL-2.0 license text as `LICENSE`, and leave developer-only files (`docs/`, `CLAUDE.md`, `.company/`) out of the release zip.
