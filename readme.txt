@@ -49,6 +49,9 @@ You're taken to the configured target page, and the browser smoothly scrolls to 
 
 == Changelog ==
 
+= Unreleased =
+* Dev: add a PHPUnit integration test suite for the tracker, settings and shortcode, run with `npm run test:php` and in CI.
+
 = 0.2.0 =
 * Add configurable excerpt word count (default 20, replacing the previous fixed 12-word trim).
 * Add option to preserve line breaks and blank lines in the excerpt.
