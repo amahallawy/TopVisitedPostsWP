@@ -24,6 +24,8 @@ class TVP_Tracker {
 
 	/**
 	 * Register hooks.
+	 *
+	 * @return void
 	 */
 	public function init() {
 		add_action( 'wp_ajax_tvp_track_view', array( $this, 'track_view' ) );
@@ -33,6 +35,8 @@ class TVP_Tracker {
 
 	/**
 	 * Enqueue the tracking script on single post pages.
+	 *
+	 * @return void
 	 */
 	public function enqueue_tracker_script() {
 		if ( ! is_single() ) {
@@ -60,6 +64,8 @@ class TVP_Tracker {
 
 	/**
 	 * AJAX handler — increment the view count for a post.
+	 *
+	 * @return void
 	 */
 	public function track_view() {
 		check_ajax_referer( 'tvp_track_view', 'nonce' );

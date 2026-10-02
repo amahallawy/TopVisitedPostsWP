@@ -49,6 +49,7 @@ jobs:
             -x 'top-visited-posts/package.json' \
             -x 'top-visited-posts/package-lock.json' \
             -x 'top-visited-posts/phpcs.xml.dist' \
+            -x 'top-visited-posts/phpstan.neon.dist' \
             -x 'top-visited-posts/.DS_Store'
 
       - name: Verify zip contents

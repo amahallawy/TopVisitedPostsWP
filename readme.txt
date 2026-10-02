@@ -49,6 +49,9 @@ You're taken to the configured target page, and the browser smoothly scrolls to 
 
 == Changelog ==
 
+= Unreleased =
+* Dev: add PHPStan static analysis (level 6, WordPress stubs) via `composer stan` and CI; fix the type mismatches it found in the settings fields and rank badge.
+
 = 0.2.0 =
 * Add configurable excerpt word count (default 20, replacing the previous fixed 12-word trim).
 * Add option to preserve line breaks and blank lines in the excerpt.
