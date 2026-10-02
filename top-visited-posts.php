@@ -1,13 +1,13 @@
 <?php
 /**
  * Plugin Name:       Top Visited Posts
- * Plugin URI:        https://example.com/top-visited-posts
+ * Plugin URI:        https://github.com/amahallawy/TopVisitedPostsWP
  * Description:       Display a configurable section of top visited posts by category with smooth scroll-to-post navigation.
  * Version:           0.2.0
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            Mahallawy
- * Author URI:        https://example.com
+ * Author URI:        https://github.com/amahallawy
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       top-visited-posts

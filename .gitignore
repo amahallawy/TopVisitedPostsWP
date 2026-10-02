@@ -10,6 +10,9 @@ package-lock.json
 .phpcs-cache
 .eslintcache
 
+# Local release builds
+build/
+
 # OS / editor
 .DS_Store
 Thumbs.db
